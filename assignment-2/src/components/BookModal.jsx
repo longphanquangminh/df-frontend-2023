@@ -109,17 +109,17 @@ function BookModal(props) {
             <div className='space-y-6'>
               <div>
                 <label>Name</label>
-                <BookInput onChange={e => handleChangeNewBookName(e.target.value)} />
+                <BookInput value={addBookName} onChange={e => handleChangeNewBookName(e.target.value)} />
                 {checkWrongName && <span className='text-red-500 font-sm'>Name cannot be empty!</span>}
               </div>
               <div>
                 <label>Author</label>
-                <BookInput onChange={e => handleChangeNewBookAuthor(e.target.value)} />
+                <BookInput value={addBookAuthor} onChange={e => handleChangeNewBookAuthor(e.target.value)} />
                 {checkWrongAuthor && <span className='text-red-500 font-sm'>Author cannot be empty!</span>}
               </div>
               <div>
                 <label>Topic</label>
-                <BookInput onChange={e => changeAddBookTopic(e.target.value)} selectOptionValues={BOOK_TYPES} />
+                <BookInput value={addBookTopic} onChange={e => changeAddBookTopic(e.target.value)} selectOptionValues={BOOK_TYPES} />
               </div>
               <div className='flex justify-end'>
                 <BookButton onClick={handleAddBook}>Create</BookButton>

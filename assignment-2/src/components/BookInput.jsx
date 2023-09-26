@@ -10,11 +10,12 @@ export default function BookInput(props) {
           onChange={e => props.onChange(e)}
           className={inputClass}
           placeholder={props.placeholder}
+          value={props.value}
         />
       ) : (
         <select className={inputClass} onChange={e => props.onChange(e)}>
           {props.selectOptionValues.map((item, index) => (
-            <option key={index} value={item}>
+            <option key={index} value={item} selected={item === props.value}>
               {item}
             </option>
           ))}
