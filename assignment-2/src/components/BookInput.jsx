@@ -4,9 +4,15 @@ export default function BookInput(props) {
   return (
     <div className='relative'>
       {notSelectOption ? (
-        <input type={props.type || "text"} onChange={() => props.onChange} className={inputClass} placeholder={props.placeholder} />
+        <input
+          name={props.name}
+          type={props.type || "text"}
+          onChange={e => props.onChange(e)}
+          className={inputClass}
+          placeholder={props.placeholder}
+        />
       ) : (
-        <select className={inputClass}>
+        <select className={inputClass} onChange={e => props.onChange(e)}>
           {props.selectOptionValues.map((item, index) => (
             <option key={index} value={item}>
               {item}

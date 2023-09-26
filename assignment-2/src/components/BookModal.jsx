@@ -1,12 +1,17 @@
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { RemoveScrollBar } from "react-remove-scroll-bar";
 import BookButton from "./BookButton";
 import BookInput from "./BookInput";
 import { BOOK_TYPES } from "../constants/bookTypes";
+import { useStoreActions, useStoreState } from "easy-peasy";
+import axios from "axios";
+import { BASE_URL } from "../constants/baseUrl";
 
 function BookModal(props) {
+  const [checkWrongName, setCheckWrongName] = useState(false);
+  const [checkWrongAuthor, setCheckWrongAuthor] = useState(false);
   const modalRef = useRef(null);
   const handleClickOutside = e => {
     if (modalRef.current && !modalRef.current.contains(e.target)) props.onClose();
@@ -32,7 +37,63 @@ function BookModal(props) {
     props.deleteBook[2]();
     props.onClose();
   };
-
+  const addBookName = useStoreState(state => state.addBookName);
+  const addBookAuthor = useStoreState(state => state.addBookAuthor);
+  const addBookTopic = useStoreState(state => state.addBookTopic);
+  const dataChanged = useStoreState(state => state.dataChanged);
+  const changeAddBookName = useStoreActions(actions => actions.changeAddBookName);
+  const changeAddBookAuthor = useStoreActions(actions => actions.changeAddBookAuthor);
+  const changeAddBookTopic = useStoreActions(actions => actions.changeAddBookTopic);
+  const changeDataChanged = useStoreActions(actions => actions.changeDataChanged);
+  const handleAddBook = () => {
+    if (addBookName.length === 0 || addBookAuthor.length === 0) {
+      if (addBookName.length === 0) {
+        setCheckWrongName(true);
+      } else {
+        setCheckWrongName(false);
+      }
+      if (addBookAuthor.length === 0) {
+        setCheckWrongAuthor(true);
+      } else {
+        setCheckWrongAuthor(false);
+      }
+    } else {
+      axios({
+        url: BASE_URL,
+        method: "POST",
+        data: {
+          name: addBookName,
+          author: addBookAuthor,
+          topic: addBookTopic,
+        },
+      })
+        .then(res => {
+          console.log(res);
+          props.onClose();
+          changeAddBookName("");
+          changeAddBookAuthor("");
+          changeAddBookTopic(BOOK_TYPES[0]);
+          changeDataChanged(!dataChanged);
+        })
+        .catch(err => console.err(err));
+    }
+  };
+  const handleChangeNewBookName = string => {
+    changeAddBookName(string);
+    if (string.length === 0) {
+      setCheckWrongName(true);
+    } else {
+      setCheckWrongName(false);
+    }
+  };
+  const handleChangeNewBookAuthor = string => {
+    changeAddBookAuthor(string);
+    if (string.length === 0) {
+      setCheckWrongAuthor(true);
+    } else {
+      setCheckWrongAuthor(false);
+    }
+  };
   return (
     <div
       className={`fixed left-0 top-0 z-50 h-screen w-screen bg-neutral-900 bg-opacity-75 flex items-center justify-center overflow-y-auto duration-300 ${props.className}`}
@@ -48,18 +109,20 @@ function BookModal(props) {
             <div className='space-y-6'>
               <div>
                 <label>Name</label>
-                <BookInput />
+                <BookInput onChange={e => handleChangeNewBookName(e.target.value)} />
+                {checkWrongName && <span className='text-red-500 font-sm'>Name cannot be empty!</span>}
               </div>
               <div>
                 <label>Author</label>
-                <BookInput />
+                <BookInput onChange={e => handleChangeNewBookAuthor(e.target.value)} />
+                {checkWrongAuthor && <span className='text-red-500 font-sm'>Author cannot be empty!</span>}
               </div>
               <div>
                 <label>Topic</label>
-                <BookInput selectOptionValues={BOOK_TYPES} />
+                <BookInput onChange={e => changeAddBookTopic(e.target.value)} selectOptionValues={BOOK_TYPES} />
               </div>
               <div className='flex justify-end'>
-                <BookButton>Create</BookButton>
+                <BookButton onClick={handleAddBook}>Create</BookButton>
               </div>
             </div>
           </>

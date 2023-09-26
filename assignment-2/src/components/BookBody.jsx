@@ -6,6 +6,9 @@ import BookModal from "./BookModal";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../constants/baseUrl";
+import { useStoreActions, useStoreState } from "easy-peasy";
+import removeExtraSpaces from "../utils/removeExtraSpaces";
+import convertAccentedVietnamese from "../utils/convertAccentedVietnamese";
 
 export default function BookBody() {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -14,15 +17,20 @@ export default function BookBody() {
   const [chosenDeleteBookId, setChosenDeleteBookId] = useState(0);
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState("");
   const beautifulTableClass = "border-2 border-[#c5cfd9] p-2";
+  const searchValue = useStoreState(actions => actions.searchValue);
+  const dataChanged = useStoreState(state => state.dataChanged);
+  const editSearchValue = useStoreActions(actions => actions.editSearchValue);
+  const changeDataChanged = useStoreActions(actions => actions.changeDataChanged);
   useEffect(() => {
     axios
       .get(BASE_URL)
       .then(res => setBookData([...res.data]))
       .catch(err => console.err(err));
-  }, [chosenDeleteBookId]);
+  }, [dataChanged]);
   const resetChosenBook = () => {
     setChosenDeleteBookId(0);
     setChosenDeleteBookName("");
+    changeDataChanged(!dataChanged);
   };
   const handleAskDelete = (id, name) => {
     setOpenDeleteModal(true);
@@ -42,7 +50,7 @@ export default function BookBody() {
     <>
       <div className='p-3 space-y-12'>
         <div className='grid grid-cols-1 md:flex gap-3 justify-between items-center'>
-          <BookInput placeholder='Search books' icon={<FontAwesomeIcon icon={faSearch} />} />
+          <BookInput onChange={e => editSearchValue(e.target.value)} placeholder='Search books' icon={<FontAwesomeIcon icon={faSearch} />} />
           <BookButton onClick={() => setOpenAddModal(true)}>Add book</BookButton>
         </div>
         {bookData.length > 0 ? (
@@ -57,23 +65,33 @@ export default function BookBody() {
                 </tr>
               </thead>
               <tbody>
-                {bookData.map((item, index) => (
-                  <tr className='bg-white hover:bg-[#f7f8fa] duration-300' key={index}>
-                    <td className={beautifulTableClass}>{item.name}</td>
-                    <td className={beautifulTableClass}>{item.author}</td>
-                    <td className={beautifulTableClass}>{item.topic}</td>
-                    <td className={beautifulTableClass}>
-                      <button
-                        onClick={() => handleAskDelete(item.id, item.name)}
-                        className='underline text-[#d2455b] hover:text-[#FF5571] duration-300'
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {bookData
+                  .filter(item => {
+                    const userSearch = removeExtraSpaces(convertAccentedVietnamese(searchValue.toLowerCase()));
+                    return (
+                      item.name.toLowerCase().includes(userSearch) ||
+                      item.author.toLowerCase().includes(userSearch) ||
+                      item.topic.toLowerCase().includes(userSearch)
+                    );
+                  })
+                  .map((item, index) => (
+                    <tr className='bg-white hover:bg-[#f7f8fa] duration-300' key={index}>
+                      <td className={beautifulTableClass}>{item.name}</td>
+                      <td className={beautifulTableClass}>{item.author}</td>
+                      <td className={beautifulTableClass}>{item.topic}</td>
+                      <td className={beautifulTableClass}>
+                        <button
+                          onClick={() => handleAskDelete(item.id, item.name)}
+                          className='underline text-[#d2455b] hover:text-[#FF5571] duration-300'
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
+            <div></div>
           </div>
         ) : (
           <p className='text-center'>There are no books available!</p>
