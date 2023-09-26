@@ -21,6 +21,14 @@ export default function BookBody() {
   const dataChanged = useStoreState(state => state.dataChanged);
   const editSearchValue = useStoreActions(actions => actions.editSearchValue);
   const changeDataChanged = useStoreActions(actions => actions.changeDataChanged);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+  const handlePageChange = newPage => {
+    setCurrentPage(newPage);
+  };
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginationButtonClass = "bg-white font-bold text-black text-center px-2 py-1 border-2 border-gray-500 rounded w-12";
+  const endIndex = startIndex + itemsPerPage;
   useEffect(() => {
     axios
       .get(BASE_URL)
@@ -46,6 +54,16 @@ export default function BookBody() {
       })
       .catch(err => console.err(err));
   };
+  const bookDataAfterFilter = [
+    ...bookData.filter(item => {
+      const userSearch = removeExtraSpaces(convertAccentedVietnamese(searchValue.toLowerCase()));
+      return (
+        item.name.toLowerCase().includes(userSearch) ||
+        item.author.toLowerCase().includes(userSearch) ||
+        item.topic.toLowerCase().includes(userSearch)
+      );
+    }),
+  ];
   return (
     <>
       <div className='p-3 space-y-12'>
@@ -65,33 +83,44 @@ export default function BookBody() {
                 </tr>
               </thead>
               <tbody>
-                {bookData
-                  .filter(item => {
-                    const userSearch = removeExtraSpaces(convertAccentedVietnamese(searchValue.toLowerCase()));
-                    return (
-                      item.name.toLowerCase().includes(userSearch) ||
-                      item.author.toLowerCase().includes(userSearch) ||
-                      item.topic.toLowerCase().includes(userSearch)
-                    );
-                  })
-                  .map((item, index) => (
-                    <tr className='bg-white hover:bg-[#f7f8fa] duration-300' key={index}>
-                      <td className={beautifulTableClass}>{item.name}</td>
-                      <td className={beautifulTableClass}>{item.author}</td>
-                      <td className={beautifulTableClass}>{item.topic}</td>
-                      <td className={beautifulTableClass}>
-                        <button
-                          onClick={() => handleAskDelete(item.id, item.name)}
-                          className='underline text-[#d2455b] hover:text-[#FF5571] duration-300'
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                {bookDataAfterFilter.slice(startIndex, endIndex).map((item, index) => (
+                  <tr className='bg-white hover:bg-[#f7f8fa] duration-300' key={index}>
+                    <td className={beautifulTableClass}>{item.name}</td>
+                    <td className={beautifulTableClass}>{item.author}</td>
+                    <td className={beautifulTableClass}>{item.topic}</td>
+                    <td className={beautifulTableClass}>
+                      <button
+                        onClick={() => handleAskDelete(item.id, item.name)}
+                        className='underline text-[#d2455b] hover:text-[#FF5571] duration-300'
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-            <div></div>
+            <div className='flex justify-end gap-x-3 my-3'>
+              {currentPage != 1 && (
+                <button className={paginationButtonClass} onClick={() => handlePageChange(currentPage - 1)}>
+                  {"<"}
+                </button>
+              )}
+              {Array.from({ length: Math.ceil(bookDataAfterFilter.length / itemsPerPage) }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`${paginationButtonClass} ${currentPage === i + 1 ? "bg-[#e3e8ee]" : ""}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              {currentPage != Math.ceil(bookDataAfterFilter.length / itemsPerPage) && (
+                <button className={paginationButtonClass} onClick={() => handlePageChange(currentPage + 1)}>
+                  {">"}
+                </button>
+              )}
+            </div>
           </div>
         ) : (
           <p className='text-center'>There are no books available!</p>
