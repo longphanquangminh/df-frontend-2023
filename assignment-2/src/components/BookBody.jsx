@@ -109,7 +109,7 @@ export default function BookBody() {
             </table>
             <div className='flex justify-end gap-x-3 my-3'>
               {currentPage != 1 && (
-                <button className={paginationButtonClass} onClick={() => handlePageChange(currentPage - 1)}>
+                <button className={`${paginationButtonClass} bg-white`} onClick={() => handlePageChange(currentPage - 1)}>
                   {"<"}
                 </button>
               )}
@@ -123,7 +123,7 @@ export default function BookBody() {
                 </button>
               ))}
               {currentPage != Math.ceil(bookDataAfterFilter.length / itemsPerPage) && (
-                <button className={paginationButtonClass} onClick={() => handlePageChange(currentPage + 1)}>
+                <button className={`${paginationButtonClass} bg-white`} onClick={() => handlePageChange(currentPage + 1)}>
                   {">"}
                 </button>
               )}
