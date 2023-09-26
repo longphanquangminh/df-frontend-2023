@@ -117,7 +117,7 @@ export default function BookBody() {
                 <button
                   key={i}
                   onClick={() => handlePageChange(i + 1)}
-                  className={`${paginationButtonClass} ${currentPage === i + 1 ? "bg-[#e3e8ee]" : ""}`}
+                  className={`${paginationButtonClass} ${currentPage === i + 1 ? "bg-gray-300" : ""}`}
                 >
                   {i + 1}
                 </button>
