@@ -28,7 +28,7 @@ export default function BookBody() {
     setCurrentPage(newPage);
   };
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginationButtonClass = "bg-white font-bold text-black text-center px-2 py-1 border-2 border-gray-500 rounded w-12";
+  const paginationButtonClass = "font-bold text-black text-center px-2 py-1 border-2 border-gray-500 rounded w-12";
   const endIndex = startIndex + itemsPerPage;
   useEffect(() => {
     axios
@@ -117,7 +117,7 @@ export default function BookBody() {
                 <button
                   key={i}
                   onClick={() => handlePageChange(i + 1)}
-                  className={`${paginationButtonClass} ${currentPage === i + 1 ? "bg-gray-300" : ""}`}
+                  className={`${paginationButtonClass} ${currentPage === i + 1 ? "bg-gray-300" : "bg-white"}`}
                 >
                   {i + 1}
                 </button>
