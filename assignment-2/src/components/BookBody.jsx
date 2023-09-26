@@ -22,6 +22,7 @@ export default function BookBody() {
   const editSearchValue = useStoreActions(actions => actions.editSearchValue);
   const changeDataChanged = useStoreActions(actions => actions.changeDataChanged);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 5;
   const handlePageChange = newPage => {
     setCurrentPage(newPage);
@@ -32,8 +33,14 @@ export default function BookBody() {
   useEffect(() => {
     axios
       .get(BASE_URL)
-      .then(res => setBookData([...res.data]))
-      .catch(err => console.err(err));
+      .then(res => {
+        setBookData([...res.data]);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.err(err);
+        setLoading(false);
+      });
   }, [dataChanged]);
   const resetChosenBook = () => {
     setChosenDeleteBookId(0);
@@ -71,7 +78,7 @@ export default function BookBody() {
           <BookInput onChange={e => editSearchValue(e.target.value)} placeholder='Search books' icon={<FontAwesomeIcon icon={faSearch} />} />
           <BookButton onClick={() => setOpenAddModal(true)}>Add book</BookButton>
         </div>
-        {bookData.length > 0 ? (
+        {bookDataAfterFilter.length > 0 ? (
           <div className='overflow-x-auto'>
             <table className='w-full border-collapse text-left bg-white'>
               <thead>
@@ -123,7 +130,7 @@ export default function BookBody() {
             </div>
           </div>
         ) : (
-          <p className='text-center'>There are no books available!</p>
+          <p className='text-center'>{loading ? "Loading..." : "There are no books available!"}</p>
         )}
       </div>
       {openDeleteModal && (
