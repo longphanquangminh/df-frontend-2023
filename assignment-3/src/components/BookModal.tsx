@@ -45,57 +45,47 @@ export default function BookModal(props) {
   }
 
   const {
-    addBookName,
-    addBookAuthor,
-    addBookTopic,
+    appSummaryInfo,
+    editInputValue,
+    resetInputValue,
     dataChanged,
-    changeAddBookName,
-    changeAddBookAuthor,
-    changeAddBookTopic,
     changeDataChanged,
   } = useAppContext()
 
   const handleAddBook = () => {
-    if (addBookName.length === 0 || addBookAuthor.length === 0) {
-      setCheckWrongName(addBookName.length === 0)
-      setCheckWrongAuthor(addBookAuthor.length === 0)
+    if (
+      appSummaryInfo.addBookName.length === 0 ||
+      appSummaryInfo.addBookAuthor.length === 0
+    ) {
+      setCheckWrongName(appSummaryInfo.addBookName.length === 0)
+      setCheckWrongAuthor(appSummaryInfo.addBookAuthor.length === 0)
     } else {
       props.onClose()
       axios({
         url: BASE_URL,
         method: 'POST',
         data: {
-          name: addBookName,
-          author: addBookAuthor,
-          topic: addBookTopic,
+          name: appSummaryInfo.addBookName,
+          author: appSummaryInfo.addBookAuthor,
+          topic: appSummaryInfo.addBookTopic,
         },
       })
         .then(() => {
-          changeAddBookName('')
-          changeAddBookAuthor('')
-          changeAddBookTopic(BOOK_TYPES[0])
+          resetInputValue()
           changeDataChanged(!dataChanged)
         })
         .catch((err) => alert(err))
     }
   }
 
-  const handleChangeNewBookName = (string) => {
-    changeAddBookName(string)
-    if (string.length === 0) {
-      setCheckWrongName(true)
-    } else {
-      setCheckWrongName(false)
-    }
+  const handleChangeNewBookName = (value) => {
+    editInputValue('addBookName', value)
+    setCheckWrongName(value.length === 0)
   }
 
-  const handleChangeNewBookAuthor = (string) => {
-    changeAddBookAuthor(string)
-    if (string.length === 0) {
-      setCheckWrongAuthor(true)
-    } else {
-      setCheckWrongAuthor(false)
-    }
+  const handleChangeNewBookAuthor = (value) => {
+    editInputValue('addBookAuthor', value)
+    setCheckWrongAuthor(value.length === 0)
   }
 
   return (
@@ -122,8 +112,10 @@ export default function BookModal(props) {
                 <BookInput
                   label="Name"
                   name="bookName"
-                  value={addBookName}
-                  onChange={(e) => handleChangeNewBookName(e.target.value)}
+                  value={appSummaryInfo.addBookName}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleChangeNewBookName(e.target.value)
+                  }
                 />
                 {checkWrongName && (
                   <span className="text-red-500 font-sm">
@@ -135,8 +127,10 @@ export default function BookModal(props) {
                 <BookInput
                   label="Author"
                   name="bookAuthor"
-                  value={addBookAuthor}
-                  onChange={(e) => handleChangeNewBookAuthor(e.target.value)}
+                  value={appSummaryInfo.addBookAuthor}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    handleChangeNewBookAuthor(e.target.value)
+                  }
                 />
                 {checkWrongAuthor && (
                   <span className="text-red-500 font-sm">
@@ -148,8 +142,10 @@ export default function BookModal(props) {
                 <BookInput
                   label="Topic"
                   name="bookTopic"
-                  value={addBookTopic}
-                  onChange={(e) => changeAddBookTopic(e.target.value)}
+                  value={appSummaryInfo.addBookTopic}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    editInputValue('addBookTopic', e.target.value)
+                  }
                   selectOptionValues={BOOK_TYPES}
                 />
               </div>
