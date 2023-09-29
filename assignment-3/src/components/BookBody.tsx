@@ -19,7 +19,8 @@ export default function BookBody() {
   const [chosenDeleteBookId, setChosenDeleteBookId] = useState(0)
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('')
   const beautifulTableClass = 'border-2 border-[#c5cfd9] p-2'
-  const a = "a"
+  const a = 'a'
+  const b = 'a'
   const { appSummaryInfo, dataChanged, editInputValue, changeDataChanged } =
     useAppContext()
   const [currentPage, setCurrentPage] = useState(1)
