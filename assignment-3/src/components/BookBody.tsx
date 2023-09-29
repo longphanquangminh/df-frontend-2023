@@ -13,6 +13,7 @@ import Pagination from './Pagination'
 import { useAppContext } from '../context/AppContext'
 
 export default function BookBody() {
+  const [loading, setLoading] = useState(true)
   const [openAddModal, setOpenAddModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [bookData, setBookData] = useState<IBook[]>([])
@@ -22,7 +23,6 @@ export default function BookBody() {
   const { appSummaryInfo, dataChanged, editInputValue, changeDataChanged } =
     useAppContext()
   const [currentPage, setCurrentPage] = useState(1)
-  const [loading, setLoading] = useState(true)
   const itemsPerPage = 5
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
