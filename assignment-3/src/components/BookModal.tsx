@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { RemoveScrollBar } from 'react-remove-scroll-bar'
-import { useStoreActions, useStoreState } from '../easy-peasy/store'
 import BookButton from './BookButton'
 import BookInput from './BookInput'
 import { BOOK_TYPES } from '../constants/bookTypes'
 import { BASE_URL } from '../constants/baseUrl'
+import { useAppContext } from '../context/AppContext'
 
 export default function BookModal(props) {
   const [checkWrongName, setCheckWrongName] = useState(false)
@@ -44,22 +44,16 @@ export default function BookModal(props) {
     props.onClose()
   }
 
-  const addBookName = useStoreState((state) => state.addBookName)
-  const addBookAuthor = useStoreState((state) => state.addBookAuthor)
-  const addBookTopic = useStoreState((state) => state.addBookTopic)
-  const dataChanged = useStoreState((state) => state.dataChanged)
-  const changeAddBookName = useStoreActions(
-    (actions) => actions.changeAddBookName,
-  )
-  const changeAddBookAuthor = useStoreActions(
-    (actions) => actions.changeAddBookAuthor,
-  )
-  const changeAddBookTopic = useStoreActions(
-    (actions) => actions.changeAddBookTopic,
-  )
-  const changeDataChanged = useStoreActions(
-    (actions) => actions.changeDataChanged,
-  )
+  const {
+    addBookName,
+    addBookAuthor,
+    addBookTopic,
+    dataChanged,
+    changeAddBookName,
+    changeAddBookAuthor,
+    changeAddBookTopic,
+    changeDataChanged,
+  } = useAppContext()
 
   const handleAddBook = () => {
     if (addBookName.length === 0 || addBookAuthor.length === 0) {

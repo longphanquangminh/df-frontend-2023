@@ -1,10 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { StoreProvider } from 'easy-peasy'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
-import { store } from './easy-peasy/store'
+import { AppContextProvider } from './context/AppContext'
 
 const rootElement = document.getElementById('root')
 
@@ -12,9 +11,9 @@ if (rootElement) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
     <React.StrictMode>
-      <StoreProvider store={store}>
+      <AppContextProvider>
         <App />
-      </StoreProvider>
+      </AppContextProvider>
     </React.StrictMode>,
   )
   // If you want to start measuring performance in your app, pass a function

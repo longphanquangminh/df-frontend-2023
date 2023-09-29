@@ -9,8 +9,8 @@ import { BASE_URL } from '../constants/baseUrl'
 import removeExtraSpaces from '../utils/removeExtraSpaces'
 import convertAccentedVietnamese from '../utils/convertAccentedVietnamese'
 import IBook from '../interfaces/IBook'
-import { useStoreActions, useStoreState } from '../easy-peasy/store'
 import Pagination from './Pagination'
+import { useAppContext } from '../context/AppContext'
 
 export default function BookBody() {
   const [openAddModal, setOpenAddModal] = useState(false)
@@ -19,12 +19,8 @@ export default function BookBody() {
   const [chosenDeleteBookId, setChosenDeleteBookId] = useState(0)
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('')
   const beautifulTableClass = 'border-2 border-[#c5cfd9] p-2'
-  const searchValue = useStoreState((actions) => actions.searchValue)
-  const dataChanged = useStoreState((state) => state.dataChanged)
-  const editSearchValue = useStoreActions((actions) => actions.editSearchValue)
-  const changeDataChanged = useStoreActions(
-    (actions) => actions.changeDataChanged,
-  )
+  const { searchValue, dataChanged, editSearchValue, changeDataChanged } =
+    useAppContext()
   const [currentPage, setCurrentPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const itemsPerPage = 5
