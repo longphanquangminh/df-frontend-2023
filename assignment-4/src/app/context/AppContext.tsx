@@ -51,7 +51,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   })
   const [dataChanged, setDataChanged] = useState(false)
   const [isLightMode, setIsLightMode] = useState<boolean>(() => {
-    const storedMode = window.localStorage.getItem('isLightMode')
+    const storedMode = localStorage.getItem('isLightMode')
     return storedMode !== 'dark'
   })
 
@@ -70,10 +70,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   const changeLightDarkMode = (newIsLightMode: boolean) => {
     setIsLightMode(newIsLightMode)
-    window.localStorage.setItem(
-      'isLightMode',
-      newIsLightMode ? 'light' : 'dark',
-    )
+    localStorage.setItem('isLightMode', newIsLightMode ? 'light' : 'dark')
   }
 
   const changeDataChanged = (newDataChanged: boolean) => {
