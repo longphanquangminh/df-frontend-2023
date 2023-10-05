@@ -73,7 +73,7 @@ export default function BookModal(props) {
           resetInputValue()
           changeDataChanged(!dataChanged)
         })
-        .catch((err) => alert(err))
+        .catch((err) => console.error(err))
     }
   }
 

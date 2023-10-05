@@ -51,8 +51,11 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   })
   const [dataChanged, setDataChanged] = useState(false)
   const [isLightMode, setIsLightMode] = useState<boolean>(() => {
-    const storedMode = localStorage.getItem('isLightMode')
-    return storedMode !== 'dark'
+    if (typeof window !== 'undefined') {
+      const storedMode = window.localStorage.getItem('isLightMode')
+      return storedMode !== 'dark'
+    }
+    return true
   })
 
   const editInputValue = (fieldName: string, value: string) => {
@@ -70,7 +73,10 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
 
   const changeLightDarkMode = (newIsLightMode: boolean) => {
     setIsLightMode(newIsLightMode)
-    localStorage.setItem('isLightMode', newIsLightMode ? 'light' : 'dark')
+    window.localStorage.setItem(
+      'isLightMode',
+      newIsLightMode ? 'light' : 'dark',
+    )
   }
 
   const changeDataChanged = (newDataChanged: boolean) => {

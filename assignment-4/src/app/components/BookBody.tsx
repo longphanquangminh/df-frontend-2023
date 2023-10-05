@@ -10,6 +10,8 @@ import convertAccentedVietnamese from '../utils/convertAccentedVietnamese'
 import IBook from '../interfaces/IBook'
 import Pagination from './Pagination'
 import { useAppContext } from '../context/AppContext'
+import BookButtonText from './BookButtonText'
+import BookButtonLink from './BookButtonLink'
 
 export default function BookBody() {
   const [loading, setLoading] = useState(true)
@@ -36,7 +38,7 @@ export default function BookBody() {
         setLoading(false)
       })
       .catch((err) => {
-        alert(err)
+        console.error(err)
         setLoading(false)
       })
   }, [dataChanged])
@@ -57,7 +59,7 @@ export default function BookBody() {
       .then(() => {
         resetChosenBook()
       })
-      .catch((err) => alert(err))
+      .catch((err) => console.error(err))
   }
   const bookDataAfterFilter = [
     ...bookData.filter((item: IBook) => {
@@ -121,23 +123,22 @@ export default function BookBody() {
                         <td className={beautifulTableClass}>{item.author}</td>
                         <td className={beautifulTableClass}>{item.topic}</td>
                         <td className={beautifulTableClass}>
-                          <button
-                            onClick={() => handleAskDelete(item.id, item.name)}
-                            className="underline text-[#d2455b] hover:text-[#FF5571] duration-300"
-                            title="Delete"
-                          >
-                            Delete
-                          </button>
-                          <span className="text-[#d2455b] font-bold">
-                            {' | '}
-                          </span>
-                          <button
-                            onClick={() => handleAskDelete(item.id, item.name)}
-                            className="underline text-[#d2455b] hover:text-[#FF5571] duration-300"
-                            title="Delete"
-                          >
-                            Delete
-                          </button>
+                          <div className="flex gap-x-2">
+                            <BookButtonText
+                              title={`Delete book #${item.id}`}
+                              onClick={() =>
+                                handleAskDelete(item.id, item.name)
+                              }
+                            >
+                              Delete
+                            </BookButtonText>
+                            <span className="text-[#d2455b] font-bold">
+                              {' | '}
+                            </span>
+                            <BookButtonLink href={`/book/${item.id}`}>
+                              View
+                            </BookButtonLink>
+                          </div>
                         </td>
                       </tr>
                     ))}

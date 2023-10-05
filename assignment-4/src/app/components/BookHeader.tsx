@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { UserCircle2 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
 
@@ -16,9 +17,9 @@ export default function BookHeader() {
           isLightMode ? '' : 'text-white'
         } duration-300`}
       >
-        bookstore
+        <Link href="/">bookstore</Link>
       </h1>
-      <div className={`${flexCenterAll} grid`}>
+      <div className={`${flexCenterAll} grid gap-x-12`}>
         <div className={flexCenterAll}>
           <button
             title="lightDarkButton"
@@ -41,7 +42,7 @@ export default function BookHeader() {
             </div>
           </button>
           <div
-            className={`w-auto md:w-36 ${
+            className={`text-right w-28 ${
               isLightMode ? '' : 'text-white'
             } duration-300`}
           >
@@ -54,7 +55,7 @@ export default function BookHeader() {
           } duration-300`}
         >
           <UserCircle2 />
-          John Doe
+          Long Phan
         </div>
       </div>
     </div>
