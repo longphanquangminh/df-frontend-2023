@@ -32,6 +32,7 @@ export default function BookViewPage() {
       })
       .catch((err) => {
         console.error(err)
+        router.replace('/error')
       })
   }, [id])
   const handleConfirmDelete = () => {
@@ -42,50 +43,53 @@ export default function BookViewPage() {
       })
       .catch((err) => console.error(err))
   }
-  if (!viewBookData) return <p>Not found</p>
   return (
     <AppContextProvider>
       <div className="flex flex-col min-h-screen bg-[#f7f8fa]">
         <div>
           <BookHeader />
         </div>
-        <div className="flex-1">
-          <div className="space-y-6 p-3">
-            <p>
-              <Link
-                className="text-[#d2455b] hover:text-[#FF5571] duration-300"
-                href="/"
-              >
-                <span className="flex items-center">
-                  <span className="mr-1">
-                    <ChevronLeft />
+        <div className="flex-1 p-3">
+          {viewBookData ? (
+            <div className="space-y-6">
+              <p>
+                <Link
+                  className="text-[#d2455b] hover:text-[#FF5571] duration-300"
+                  href="/"
+                >
+                  <span className="flex items-center">
+                    <span className="mr-1">
+                      <ChevronLeft />
+                    </span>
+                    <span>Back</span>
                   </span>
-                  <span>Back</span>
-                </span>
-              </Link>
-            </p>
-            <h1 className="text-3xl font-bold">{viewBookData.name}</h1>
-            <div>
-              <p>
-                <span className="font-bold">Author: </span>
-                <span>{viewBookData.author}</span>
+                </Link>
               </p>
-              <p>
-                <span className="font-bold">Topic: </span>
-                <span>{viewBookData.topic}</span>
-              </p>
+              <h1 className="text-3xl font-bold">{viewBookData.name}</h1>
+              <div>
+                <p>
+                  <span className="font-bold">Author: </span>
+                  <span>{viewBookData.author}</span>
+                </p>
+                <p>
+                  <span className="font-bold">Topic: </span>
+                  <span>{viewBookData.topic}</span>
+                </p>
+              </div>
+              <div>
+                <BookButtonText
+                  title={`Delete ${viewBookData.name} book`}
+                  onClick={() => {
+                    handleAskDelete(viewBookData.id, viewBookData.name)
+                  }}
+                >
+                  Delete
+                </BookButtonText>
+              </div>
             </div>
-            <div>
-              <BookButtonText
-                title={`Delete ${viewBookData.name} book`}
-                onClick={() => {
-                  handleAskDelete(viewBookData.id, viewBookData.name)
-                }}
-              >
-                Delete
-              </BookButtonText>
-            </div>
-          </div>
+          ) : (
+            <div>Loading...</div>
+          )}
         </div>
       </div>
       {openDeleteModal && (
