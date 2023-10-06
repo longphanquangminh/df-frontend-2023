@@ -15,7 +15,7 @@ export default function BookHeader() {
       } duration-300 grid border-b-2 border-[#c5cfd9]`}
     >
       <h1
-        className={`capitalize font-bold text-green text-3xl ${flexCenterAll} ${
+        className={`capitalize font-bold text-3xl ${flexCenterAll} ${
           !isLightMode && 'text-white'
         } duration-300`}
       >
