@@ -99,7 +99,7 @@ export default function BookBody() {
   })
   return (
     <>
-      <div className="p-3 space-y-12">
+      <div className="space-y-12">
         <div className="grid grid-cols-1 md:flex gap-3 justify-between items-center">
           <BookInput
             onChange={(e) => editSearchValue(e.target.value)}

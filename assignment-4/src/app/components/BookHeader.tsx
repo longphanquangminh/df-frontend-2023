@@ -1,3 +1,5 @@
+'use client'
+
 import Link from 'next/link'
 import { UserCircle2 } from 'lucide-react'
 import { useAppContext } from '../context/AppContext'
@@ -14,7 +16,7 @@ export default function BookHeader() {
     >
       <h1
         className={`capitalize font-bold text-green text-3xl ${flexCenterAll} ${
-          isLightMode ? '' : 'text-white'
+          !isLightMode && 'text-white'
         } duration-300`}
       >
         <Link href="/">bookstore</Link>
@@ -43,7 +45,7 @@ export default function BookHeader() {
           </button>
           <div
             className={`text-right w-28 ${
-              isLightMode ? '' : 'text-white'
+              !isLightMode && 'text-white'
             } duration-300`}
           >
             {isLightMode ? 'Light' : 'Dark'} mode
@@ -51,7 +53,7 @@ export default function BookHeader() {
         </div>
         <div
           className={`${flexCenterAll} ${
-            isLightMode ? '' : 'text-white'
+            !isLightMode && 'text-white'
           } duration-300`}
         >
           <UserCircle2 />

@@ -1,3 +1,5 @@
+'use client'
+
 import { ClipLoader } from 'react-spinners'
 import { useAppContext } from '../context/AppContext'
 
