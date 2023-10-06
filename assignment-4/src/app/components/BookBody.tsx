@@ -21,12 +21,17 @@ export default function BookBody() {
   const [chosenDeleteBookId, setChosenDeleteBookId] = useState(0)
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('')
   const beautifulTableClass = 'border-2 border-[#c5cfd9] p-2'
-  const { appSummaryInfo, dataChanged, editInputValue, changeDataChanged } =
-    useAppContext()
-  const [currentPage, setCurrentPage] = useState(1)
+  const {
+    dataChanged,
+    searchValue,
+    currentPage,
+    editCurrentPage,
+    editSearchValue,
+    changeDataChanged,
+  } = useAppContext()
   const itemsPerPage = 5
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage)
+    editCurrentPage(newPage)
   }
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
@@ -64,7 +69,7 @@ export default function BookBody() {
   const bookDataAfterFilter = [
     ...bookData.filter((item: IBook) => {
       const userSearch = removeExtraSpaces(
-        convertAccentedVietnamese(appSummaryInfo.searchValue.toLowerCase()),
+        convertAccentedVietnamese(searchValue.toLowerCase()),
       )
       return (
         convertAccentedVietnamese(item.name.toLowerCase()).includes(
@@ -82,18 +87,19 @@ export default function BookBody() {
       currentPage > 1 &&
       currentPage > Math.ceil(bookDataAfterFilter.length / itemsPerPage)
     ) {
-      setCurrentPage(currentPage - 1)
+      editCurrentPage(currentPage - 1)
     }
-  }, [bookDataAfterFilter.length, currentPage])
+  })
   return (
     <>
       <div className="p-3 space-y-12">
         <div className="grid grid-cols-1 md:flex gap-3 justify-between items-center">
           <BookInput
-            onChange={(e) => editInputValue('searchValue', e.target.value)}
+            onChange={(e) => editSearchValue(e.target.value)}
             placeholder="Search books"
             name="searchBooks"
             icon={<Search />}
+            value={searchValue}
           />
           <BookButton onClick={() => setOpenAddModal(true)}>
             Add book
@@ -101,7 +107,7 @@ export default function BookBody() {
         </div>
         {bookDataAfterFilter.length > 0 ? (
           <div>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto h-72">
               <table className="w-full border-collapse text-left bg-white">
                 <thead>
                   <tr>

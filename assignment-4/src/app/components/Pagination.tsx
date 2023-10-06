@@ -39,25 +39,25 @@ export default function Pagination({
     <div>
       {totalLength > itemsPerPage && (
         <div className="flex justify-end gap-x-3 my-3">
-          {currentPage !== 1 && (
-            <button
-              title="turnToPreviousPageButton"
-              className={`${paginationButtonClass} bg-white`}
-              onClick={() => onPageChange(currentPage - 1)}
-            >
-              {'<'}
-            </button>
-          )}
+          <button
+            title="turnToPreviousPageButton"
+            className={`${paginationButtonClass} bg-white ${
+              !(currentPage !== 1) && 'invisible'
+            }`}
+            onClick={() => onPageChange(currentPage - 1)}
+          >
+            {'<'}
+          </button>
           {renderPageButtons()}
-          {currentPage !== totalPages && (
-            <button
-              title="turnToNextPageButton"
-              className={`${paginationButtonClass} bg-white`}
-              onClick={() => onPageChange(currentPage + 1)}
-            >
-              {'>'}
-            </button>
-          )}
+          <button
+            title="turnToNextPageButton"
+            className={`${paginationButtonClass} bg-white ${
+              !(currentPage !== totalPages) && 'invisible'
+            }`}
+            onClick={() => onPageChange(currentPage + 1)}
+          >
+            {'>'}
+          </button>
         </div>
       )}
     </div>

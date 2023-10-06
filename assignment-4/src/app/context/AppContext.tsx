@@ -4,21 +4,26 @@ import React, {
   useMemo,
   useState,
   ReactNode,
+  useCallback,
 } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { BOOK_TYPES } from '../constants/bookTypes'
 
 interface AppContextInfo {
   addBookName: string
   addBookAuthor: string
   addBookTopic: string
-  searchValue: string
 }
 
 interface AppContextData {
   appSummaryInfo: AppContextInfo
   isLightMode: boolean
   dataChanged: boolean
+  searchValue: string
+  currentPage: number
   editInputValue: (fieldName: string, value: string) => void
+  editSearchValue: (value: string) => void
+  editCurrentPage: (value: number) => void
   resetInputValue: () => void
   changeLightDarkMode: (isLightMode: boolean) => void
   changeDataChanged: (dataChanged: boolean) => void
@@ -42,13 +47,17 @@ const defaultValueData = {
   addBookName: '',
   addBookAuthor: '',
   addBookTopic: BOOK_TYPES[0],
-  searchValue: '',
 }
 
 export function AppContextProvider({ children }: AppContextProviderProps) {
   const [appSummaryInfo, setAppSummaryInfo] = useState({
     ...defaultValueData,
   })
+  const searchParams = useSearchParams()
+  const [searchValue, setSearchValue] = useState<string>(
+    searchParams.get('q') || '',
+  )
+  const [currentPage, setCurrentPage] = useState<number>(1)
   const [dataChanged, setDataChanged] = useState(false)
   const [isLightMode, setIsLightMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -57,7 +66,27 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     }
     return true
   })
+  const router = useRouter()
+  const editSearchValue = useCallback(
+    (value: string) => {
+      setSearchValue(value)
+      const result =
+        value === '' ? '/' : `?q=${value}&page=${currentPage.toString()}`
 
+      router.replace(result)
+    },
+    [router, currentPage],
+  )
+  const editCurrentPage = useCallback(
+    (value: number) => {
+      setCurrentPage(value)
+      const result =
+        searchValue === '' ? '/' : `?q=${searchValue}&page=${value.toString()}`
+
+      router.replace(result)
+    },
+    [router, searchValue],
+  )
   const editInputValue = (fieldName: string, value: string) => {
     setAppSummaryInfo((prevState) => ({
       ...prevState,
@@ -88,12 +117,24 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       appSummaryInfo,
       isLightMode,
       dataChanged,
+      searchValue,
+      currentPage,
       editInputValue,
       resetInputValue,
       changeLightDarkMode,
       changeDataChanged,
+      editCurrentPage,
+      editSearchValue,
     }),
-    [appSummaryInfo, isLightMode, dataChanged],
+    [
+      appSummaryInfo,
+      isLightMode,
+      dataChanged,
+      searchValue,
+      currentPage,
+      editCurrentPage,
+      editSearchValue,
+    ],
   )
 
   return (
