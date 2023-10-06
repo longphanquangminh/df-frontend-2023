@@ -21,10 +21,13 @@ interface AppContextData {
   dataChanged: boolean
   searchValue: string
   currentPage: number
+  loading: boolean
   editInputValue: (fieldName: string, value: string) => void
   editSearchValue: (value: string) => void
   editCurrentPage: (value: number) => void
   resetInputValue: () => void
+  editLoadingTrue: () => void
+  editLoadingFalse: () => void
   changeLightDarkMode: (isLightMode: boolean) => void
   changeDataChanged: (dataChanged: boolean) => void
 }
@@ -59,6 +62,13 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   )
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [dataChanged, setDataChanged] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const editLoadingTrue = () => {
+    setLoading(true)
+  }
+  const editLoadingFalse = () => {
+    setLoading(false)
+  }
   const [isLightMode, setIsLightMode] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
       const storedMode = window.localStorage.getItem('isLightMode')
@@ -119,12 +129,15 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       dataChanged,
       searchValue,
       currentPage,
+      loading,
       editInputValue,
       resetInputValue,
       changeLightDarkMode,
       changeDataChanged,
       editCurrentPage,
       editSearchValue,
+      editLoadingTrue,
+      editLoadingFalse,
     }),
     [
       appSummaryInfo,
@@ -132,6 +145,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       dataChanged,
       searchValue,
       currentPage,
+      loading,
       editCurrentPage,
       editSearchValue,
     ],

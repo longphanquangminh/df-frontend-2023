@@ -41,7 +41,9 @@ export default function BookViewPage() {
       .then(() => {
         router.replace('/')
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+      })
   }
   return (
     <AppContextProvider>

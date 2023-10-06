@@ -49,6 +49,8 @@ export default function BookModal(props) {
     resetInputValue,
     dataChanged,
     changeDataChanged,
+    editLoadingTrue,
+    editLoadingFalse,
   } = useAppContext()
 
   const handleAddBook = () => {
@@ -60,6 +62,7 @@ export default function BookModal(props) {
       setCheckWrongAuthor(appSummaryInfo.addBookAuthor.length === 0)
     } else {
       props.onClose()
+      editLoadingTrue()
       axios({
         url: BASE_URL,
         method: 'POST',
@@ -72,8 +75,12 @@ export default function BookModal(props) {
         .then(() => {
           resetInputValue()
           changeDataChanged(!dataChanged)
+          editLoadingFalse()
         })
-        .catch((err) => console.error(err))
+        .catch((err) => {
+          console.error(err)
+          editLoadingFalse()
+        })
     }
   }
 

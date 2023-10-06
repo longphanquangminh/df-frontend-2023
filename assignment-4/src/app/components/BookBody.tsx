@@ -14,7 +14,6 @@ import BookButtonText from './BookButtonText'
 import BookButtonLink from './BookButtonLink'
 
 export default function BookBody() {
-  const [loading, setLoading] = useState(true)
   const [openAddModal, setOpenAddModal] = useState(false)
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
   const [bookData, setBookData] = useState<IBook[]>([])
@@ -28,6 +27,8 @@ export default function BookBody() {
     editCurrentPage,
     editSearchValue,
     changeDataChanged,
+    editLoadingTrue,
+    editLoadingFalse,
   } = useAppContext()
   const itemsPerPage = 5
   const handlePageChange = (newPage) => {
@@ -36,15 +37,16 @@ export default function BookBody() {
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   useEffect(() => {
+    editLoadingTrue()
     axios
       .get(BASE_URL)
       .then((res) => {
         setBookData([...res.data])
-        setLoading(false)
+        editLoadingFalse()
       })
       .catch((err) => {
         console.error(err)
-        setLoading(false)
+        editLoadingFalse()
       })
   }, [dataChanged])
 
@@ -59,12 +61,17 @@ export default function BookBody() {
     setChosenDeleteBookName(name)
   }
   const handleConfirmDelete = () => {
+    editLoadingTrue()
     axios
       .delete(`${BASE_URL}/${chosenDeleteBookId}`)
       .then(() => {
         resetChosenBook()
+        editLoadingFalse()
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+        editLoadingFalse()
+      })
   }
   const bookDataAfterFilter = [
     ...bookData.filter((item: IBook) => {
@@ -159,9 +166,7 @@ export default function BookBody() {
             />
           </div>
         ) : (
-          <p className="text-center">
-            {loading ? 'Loading...' : 'There are no books available!'}
-          </p>
+          <p className="text-center">There are no books available!</p>
         )}
       </div>
       {openDeleteModal && (
