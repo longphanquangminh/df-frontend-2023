@@ -34,7 +34,7 @@ export default function BookViewPage() {
         console.error(err)
         router.replace('/error')
       })
-  }, [id])
+  }, [id, router])
   const handleConfirmDelete = () => {
     axios
       .delete(`${BASE_URL}/${chosenDeleteBookId}`)
