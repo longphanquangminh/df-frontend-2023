@@ -16,7 +16,7 @@ export default function BookHeader() {
     >
       <h1
         className={`capitalize font-bold text-3xl ${flexCenterAll} ${
-          !isLightMode && 'text-white'
+          isLightMode ? 'text-black' : 'text-white'
         } duration-300`}
       >
         <Link href="/">bookstore</Link>
@@ -45,7 +45,7 @@ export default function BookHeader() {
           </button>
           <div
             className={`text-right w-28 ${
-              !isLightMode && 'text-white'
+              isLightMode ? 'text-black' : 'text-white'
             } duration-300`}
           >
             {isLightMode ? 'Light' : 'Dark'} mode
@@ -53,7 +53,7 @@ export default function BookHeader() {
         </div>
         <div
           className={`${flexCenterAll} ${
-            !isLightMode && 'text-white'
+            isLightMode ? 'text-black' : 'text-white'
           } duration-300`}
         >
           <UserCircle2 />
