@@ -1,15 +1,9 @@
 'use client';
 
-import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
-import { useAppContext } from './context/AppContext';
 
 export default function NotFound() {
-  const { editLoadingFalse } = useAppContext();
-  useEffect(() => {
-    editLoadingFalse();
-  }, []);
   return (
     <div className="flex justify-center items-center">
       <div className="text-center font-bold space-y-6">
