@@ -1,47 +1,60 @@
-import { useEffect, useRef, useState } from 'react'
-import axios from 'axios'
-import { RemoveScrollBar } from 'react-remove-scroll-bar'
-import { X } from 'lucide-react'
-import BookButton from './BookButton'
-import BookInput from './BookInput'
-import { BOOK_TYPES } from '../constants/bookTypes'
-import { BASE_URL } from '../constants/baseUrl'
-import { useAppContext } from '../context/AppContext'
+import { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
+import { RemoveScrollBar } from 'react-remove-scroll-bar';
+import { X } from 'lucide-react';
+import BookButton from './BookButton';
+import BookInput from './BookInput';
+import { BOOK_TYPES } from '../constants/bookTypes';
+import { BASE_URL } from '../constants/baseUrl';
+import { useAppContext } from '../context/AppContext';
+import IBook from 'app/interfaces/IBook';
+import removeExtraSpaces from 'app/utils/removeExtraSpaces';
+import { lettersSpacesRegex } from 'app/regex/lettersSpacesRegex';
 
-export default function BookModal(props) {
-  const [checkWrongName, setCheckWrongName] = useState(false)
-  const [checkWrongAuthor, setCheckWrongAuthor] = useState(false)
-  const modalRef = useRef(null)
+type Props = {
+  onClose: () => void;
+  className?: string;
+  deleteBook?: [string | number, string, () => void];
+  isEdit?: boolean;
+  chosenBookData?: IBook;
+};
+
+export default function BookModal(props: Props) {
+  const [checkWrongName, setCheckWrongName] = useState(false);
+  const [checkWrongAuthor, setCheckWrongAuthor] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e: MouseEvent) => {
       if (
         modalRef.current &&
         !(modalRef.current as HTMLElement).contains(e.target as Node)
       ) {
-        props.onClose()
+        props.onClose();
       }
-    }
+    };
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        props.onClose()
+        props.onClose();
       }
-    }
+    };
 
-    document.addEventListener('mousedown', handleClickOutside)
-    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [props])
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [props]);
 
   const handleDeleteBook = () => {
-    props.deleteBook[2]()
-    props.onClose()
-  }
+    if (props.deleteBook && props.deleteBook.length > 0) {
+      props.deleteBook[2]();
+    }
+    props.onClose();
+  };
 
   const {
     appSummaryInfo,
@@ -51,18 +64,24 @@ export default function BookModal(props) {
     changeDataChanged,
     editLoadingTrue,
     editLoadingFalse,
-  } = useAppContext()
+  } = useAppContext();
 
+  const handleEditBook = () => {
+    console.log('a');
+  };
   const handleAddBook = () => {
-    if (
-      appSummaryInfo.addBookName.length === 0 ||
-      appSummaryInfo.addBookAuthor.length === 0
-    ) {
-      setCheckWrongName(appSummaryInfo.addBookName.length === 0)
-      setCheckWrongAuthor(appSummaryInfo.addBookAuthor.length === 0)
+    const notGoodName = !(
+      removeExtraSpaces(appSummaryInfo.addBookName).length >= 5
+    );
+    const notGoodAuthor = !lettersSpacesRegex.test(
+      appSummaryInfo.addBookAuthor
+    );
+    if (notGoodName || notGoodAuthor) {
+      setCheckWrongName(notGoodName);
+      setCheckWrongAuthor(notGoodAuthor);
     } else {
-      props.onClose()
-      editLoadingTrue()
+      props.onClose();
+      editLoadingTrue();
       axios({
         url: BASE_URL,
         method: 'POST',
@@ -73,30 +92,30 @@ export default function BookModal(props) {
         },
       })
         .then(() => {
-          resetInputValue()
-          changeDataChanged(!dataChanged)
-          editLoadingFalse()
+          resetInputValue();
+          changeDataChanged(!dataChanged);
+          editLoadingFalse();
         })
         .catch((err) => {
-          console.error(err)
-          editLoadingFalse()
-        })
+          console.error(err);
+          editLoadingFalse();
+        });
     }
-  }
+  };
 
-  const handleChangeNewBookName = (value) => {
-    editInputValue('addBookName', value)
-    setCheckWrongName(value.length === 0)
-  }
+  const handleChangeNewBookName = (value: string) => {
+    editInputValue('addBookName', value);
+    setCheckWrongName(value.length === 0);
+  };
 
-  const handleChangeNewBookAuthor = (value) => {
-    editInputValue('addBookAuthor', value)
-    setCheckWrongAuthor(value.length === 0)
-  }
+  const handleChangeNewBookAuthor = (value: string) => {
+    editInputValue('addBookAuthor', value);
+    setCheckWrongAuthor(value.length === 0);
+  };
 
   return (
     <div
-      className={`fixed left-0 top-0 z-50 h-screen w-screen bg-neutral-900 bg-opacity-75 flex items-center justify-center overflow-y-auto duration-300 ${props.className}`}
+      className={`fixed left-0 top-0 z-40 h-screen w-screen bg-neutral-900 bg-opacity-75 flex items-center justify-center overflow-y-auto duration-300 ${props.className}`}
     >
       <RemoveScrollBar />
       <div
@@ -106,7 +125,9 @@ export default function BookModal(props) {
         {!props.deleteBook ? (
           <>
             <div className="flex justify-between mb-6">
-              <div className="font-bold text-xl">Add book</div>
+              <div className="font-bold text-xl">
+                {props.isEdit ? 'Edit' : 'Add'} book
+              </div>
               <X
                 onClick={props.onClose}
                 className="cursor-pointer text-gray-500 text-sm hover:text-black duration-300"
@@ -118,13 +139,15 @@ export default function BookModal(props) {
                   label="Name"
                   name="bookName"
                   value={appSummaryInfo.addBookName}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChangeNewBookName(e.target.value)
-                  }
+                  onChange={(
+                    e:
+                      | React.ChangeEvent<HTMLInputElement>
+                      | React.ChangeEvent<HTMLSelectElement>
+                  ) => handleChangeNewBookName(e.target.value)}
                 />
                 {checkWrongName && (
                   <span className="text-red-500 font-sm">
-                    Name cannot be empty!
+                    Book name: Minimum of 5 characters, required.
                   </span>
                 )}
               </div>
@@ -133,13 +156,15 @@ export default function BookModal(props) {
                   label="Author"
                   name="bookAuthor"
                   value={appSummaryInfo.addBookAuthor}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChangeNewBookAuthor(e.target.value)
-                  }
+                  onChange={(
+                    e:
+                      | React.ChangeEvent<HTMLInputElement>
+                      | React.ChangeEvent<HTMLSelectElement>
+                  ) => handleChangeNewBookAuthor(e.target.value)}
                 />
                 {checkWrongAuthor && (
                   <span className="text-red-500 font-sm">
-                    Author cannot be empty!
+                    Author name: Only letters and spaces, required.
                   </span>
                 )}
               </div>
@@ -148,14 +173,26 @@ export default function BookModal(props) {
                   label="Topic"
                   name="bookTopic"
                   value={appSummaryInfo.addBookTopic}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    editInputValue('addBookTopic', e.target.value)
-                  }
+                  onChange={(
+                    e:
+                      | React.ChangeEvent<HTMLInputElement>
+                      | React.ChangeEvent<HTMLSelectElement>
+                  ) => editInputValue('addBookTopic', e.target.value)}
                   selectOptionValues={BOOK_TYPES}
                 />
               </div>
               <div className="flex justify-end">
-                <BookButton onClick={handleAddBook}>Create</BookButton>
+                <BookButton
+                  onClick={() => {
+                    if (props.isEdit) {
+                      handleEditBook();
+                    } else {
+                      handleAddBook();
+                    }
+                  }}
+                >
+                  {props.isEdit ? 'Edit' : 'Create'}
+                </BookButton>
               </div>
             </div>
           </>
@@ -185,5 +222,5 @@ export default function BookModal(props) {
         )}
       </div>
     </div>
-  )
+  );
 }

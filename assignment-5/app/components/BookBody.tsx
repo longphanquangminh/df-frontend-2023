@@ -12,12 +12,20 @@ import Pagination from './Pagination';
 import { useAppContext } from '../context/AppContext';
 import BookButtonText from './BookButtonText';
 import BookButtonLink from './BookButtonLink';
+import { BOOK_TYPES } from 'app/constants/bookTypes';
 
 export default function BookBody() {
   const [openAddModal, setOpenAddModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [bookData, setBookData] = useState<IBook[]>([]);
-  const [chosenDeleteBookId, setChosenDeleteBookId] = useState(0);
+  const [chosenBookId, setChosenBookId] = useState(1);
+  const [chosenBookData, setChosenBookData] = useState({
+    id: 0,
+    name: '',
+    author: '',
+    topic: BOOK_TYPES[0],
+  });
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('');
   const beautifulTableClass = 'border-2 border-[#c5cfd9] p-2';
   const {
@@ -39,6 +47,19 @@ export default function BookBody() {
   useEffect(() => {
     editLoadingTrue();
     axios
+      .get(`${BASE_URL}/${chosenBookId}`)
+      .then((res) => {
+        setChosenBookData(res.data);
+        editLoadingFalse();
+      })
+      .catch((err) => {
+        console.error(err);
+        editLoadingFalse();
+      });
+  }, [chosenBookId]);
+  useEffect(() => {
+    editLoadingTrue();
+    axios
       .get(BASE_URL)
       .then((res) => {
         setBookData([...res.data]);
@@ -51,19 +72,23 @@ export default function BookBody() {
   }, [dataChanged]);
 
   const resetChosenBook = () => {
-    setChosenDeleteBookId(0);
+    setChosenBookId(0);
     setChosenDeleteBookName('');
     changeDataChanged(!dataChanged);
   };
   const handleAskDelete = (id: number, name: string) => {
     setOpenDeleteModal(true);
-    setChosenDeleteBookId(id);
+    setChosenBookId(id);
     setChosenDeleteBookName(name);
+  };
+  const handleEditBook = (id: number) => {
+    setOpenEditModal(true);
+    setChosenBookId(id);
   };
   const handleConfirmDelete = () => {
     editLoadingTrue();
     axios
-      .delete(`${BASE_URL}/${chosenDeleteBookId}`)
+      .delete(`${BASE_URL}/${chosenBookId}`)
       .then(() => {
         resetChosenBook();
         editLoadingFalse();
@@ -99,12 +124,14 @@ export default function BookBody() {
   });
   return (
     <>
-      <div className="space-y-12">
+      <div className="space-y-12 p-3">
         <div className="grid grid-cols-1 md:flex gap-3 justify-between items-center">
           <BookInput
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              editSearchValue(e.target.value)
-            }
+            onChange={(
+              e:
+                | React.ChangeEvent<HTMLInputElement>
+                | React.ChangeEvent<HTMLSelectElement>
+            ) => editSearchValue(e.target.value)}
             placeholder="Search books"
             name="searchBooks"
             icon={<Search />}
@@ -141,6 +168,15 @@ export default function BookBody() {
                           <div className="flex gap-x-2">
                             <BookButtonText
                               title={`Delete book #${item.id}`}
+                              onClick={() => handleEditBook(item.id)}
+                            >
+                              Edit
+                            </BookButtonText>
+                            <span className="text-[#d2455b] font-bold">
+                              {' | '}
+                            </span>
+                            <BookButtonText
+                              title={`Delete book #${item.id}`}
                               onClick={() =>
                                 handleAskDelete(item.id, item.name)
                               }
@@ -173,15 +209,18 @@ export default function BookBody() {
       </div>
       {openDeleteModal && (
         <BookModal
-          deleteBook={[
-            chosenDeleteBookId,
-            chosenDeleteBookName,
-            handleConfirmDelete,
-          ]}
+          deleteBook={[chosenBookId, chosenDeleteBookName, handleConfirmDelete]}
           onClose={() => setOpenDeleteModal(false)}
         />
       )}
       {openAddModal && <BookModal onClose={() => setOpenAddModal(false)} />}
+      {openEditModal && (
+        <BookModal
+          isEdit
+          chosenBookData={chosenBookData}
+          onClose={() => setOpenEditModal(false)}
+        />
+      )}
     </>
   );
 }

@@ -5,7 +5,7 @@ import { ChevronLeft } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="flex justify-center items-center">
+    <div className="flex flex-1 justify-center items-center">
       <div className="text-center font-bold space-y-6">
         <h1 className="text-8xl select-none">404</h1>
         <p>Page not found</p>

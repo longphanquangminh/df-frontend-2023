@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { UserCircle2 } from 'lucide-react'
-import { useAppContext } from '../context/AppContext'
+import Link from 'next/link';
+import { UserCircle2 } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
 
 export default function BookHeader() {
-  const { isLightMode, changeLightDarkMode } = useAppContext()
+  const { isLightMode, changeLightDarkMode } = useAppContext();
   const flexCenterAll =
-    'flex md:flex gap-3 md:justify-between items-center place-self-center'
+    'flex md:flex gap-3 md:justify-between items-center place-self-center';
   return (
     <div
       className={`${flexCenterAll} p-3 text-xl ${
@@ -28,7 +28,7 @@ export default function BookHeader() {
             onClick={() => changeLightDarkMode(!isLightMode)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
-                changeLightDarkMode(!isLightMode)
+                changeLightDarkMode(!isLightMode);
               }
             }}
             className={`cursor-pointer rounded-full ${
@@ -51,15 +51,16 @@ export default function BookHeader() {
             {isLightMode ? 'Light' : 'Dark'} mode
           </div>
         </div>
-        <div
+        <Link
+          href="/login"
           className={`${flexCenterAll} ${
             isLightMode ? 'text-black' : 'text-white'
           } duration-300`}
         >
           <UserCircle2 />
-          Long Phan
-        </div>
+          Login
+        </Link>
       </div>
     </div>
-  )
+  );
 }

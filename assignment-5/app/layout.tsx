@@ -24,7 +24,7 @@ export default function RootLayout({
               <div>
                 <BookHeader />
               </div>
-              <div className="flex-1 p-3">{children}</div>
+              {children}
             </div>
           </Suspense>
         </AppContextProvider>

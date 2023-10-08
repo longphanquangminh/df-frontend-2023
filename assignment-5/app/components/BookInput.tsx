@@ -1,8 +1,44 @@
-import classNames from 'classnames'
+import classNames from 'classnames';
+import { useState } from 'react';
 
-export default function BookInput(props) {
+type Props = {
+  name?: string;
+  label?: string;
+  required?: boolean;
+  type?: string;
+  onChange: (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => void;
+  placeholder?: string;
+  value?: string;
+  icon?: React.ReactNode;
+  iconClassName?: string;
+  className?: string;
+  selectOptionValues?: string[];
+  seePasswordOption?: boolean;
+  seePasswordOptionClassName?: string;
+};
+
+export default function BookInput(props: Props) {
+  const {
+    name,
+    label,
+    required,
+    type,
+    onChange,
+    placeholder,
+    value,
+    icon,
+    iconClassName,
+    className,
+    selectOptionValues,
+    seePasswordOption,
+    seePasswordOptionClassName,
+  } = props;
   const notSelectOption =
-    !props.selectOptionValues || props.selectOptionValues.length === 0
+    !selectOptionValues || selectOptionValues.length === 0;
   const inputClass = classNames(
     'w-full',
     'border-2',
@@ -12,47 +48,72 @@ export default function BookInput(props) {
     'rounded-lg',
     'px-2.5',
     {
-      'pl-9': props.icon,
+      'pl-9': icon,
     },
-    props.className,
-  )
+    {
+      'pr-12': seePasswordOption,
+    },
+    className
+  );
+  const labelHidePassword = type === 'password' && seePasswordOption && 'Hide';
+  const labelShowPassword = type === 'password' && seePasswordOption && 'Show';
+
+  const [hidePassword, setHidePassword] = useState(true);
+  const checkType = () => {
+    if (type === 'password') {
+      if (hidePassword) {
+        return type;
+      }
+      return 'text';
+    }
+    return type;
+  };
+  const checkTypeValue = checkType();
   return (
     <div className="relative">
-      <label htmlFor={props.name}>
-        {props.label}
+      <label className="space-y-1" htmlFor={name}>
+        <span className="text-left font-bold">
+          {label} {required && '(*)'}
+        </span>
         {notSelectOption ? (
           <input
-            id={props.name}
-            name={props.name}
-            type={props.type || 'text'}
-            onChange={(e) => props.onChange(e)}
+            id={name}
+            name={name}
+            type={checkTypeValue}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)}
             className={inputClass}
-            placeholder={props.placeholder}
-            value={props.value}
+            placeholder={placeholder}
+            value={value}
           />
         ) : (
           <select
             className={inputClass}
-            value={props.value}
-            onChange={(e) => props.onChange(e)}
-            id={props.name}
-            name={props.name}
+            value={value}
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e)}
+            id={name}
+            name={name}
           >
-            {props.selectOptionValues.map((item, index) => (
+            {selectOptionValues.map((item, index) => (
               <option key={index} value={item} id={item}>
                 {item}
               </option>
             ))}
           </select>
         )}
+        <div
+          className={`${iconClassName || ''} top-1.5 left-2.5 absolute text-lg`}
+        >
+          {icon}
+        </div>
+        <button
+          onClick={() => setHidePassword(!hidePassword)}
+          className={`${
+            seePasswordOptionClassName || ''
+          } top-8 right-2.5 absolute text-sm cursor-pointer`}
+        >
+          {hidePassword ? labelShowPassword : labelHidePassword}
+        </button>
       </label>
-      <div
-        className={`${
-          props.iconClassName || ''
-        } top-1.5 left-2.5 absolute text-lg`}
-      >
-        {props.icon}
-      </div>
     </div>
-  )
+  );
 }
