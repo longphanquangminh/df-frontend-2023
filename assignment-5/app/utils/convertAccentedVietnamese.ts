@@ -1,5 +1,5 @@
 export default function convertAccentedVietnamese(input: string) {
-  const diacriticsMap = {
+  const diacriticsMap: { [key: string]: string } = {
     à: 'a',
     á: 'a',
     ả: 'a',
@@ -71,6 +71,7 @@ export default function convertAccentedVietnamese(input: string) {
 
   return input.replace(
     /[àáảãạăằắẳẵặầấẩẫậâèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộổốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]/g,
-    (match) => diacriticsMap[match] || match
+    (match: string) =>
+      diacriticsMap[match as keyof typeof diacriticsMap] || match
   );
 }
