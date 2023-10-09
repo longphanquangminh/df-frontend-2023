@@ -19,7 +19,7 @@ export default function BookBody() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [bookData, setBookData] = useState<IBook[]>([]);
-  const [chosenBookId, setChosenBookId] = useState(1);
+  const [chosenBookId, setChosenBookId] = useState(0);
   const [chosenBookData, setChosenBookData] = useState({
     id: 0,
     name: '',
@@ -37,6 +37,7 @@ export default function BookBody() {
     changeDataChanged,
     editLoadingTrue,
     editLoadingFalse,
+    putInfoToInputs,
   } = useAppContext();
   const itemsPerPage = 5;
   const handlePageChange = (newPage: number) => {
@@ -44,19 +45,6 @@ export default function BookBody() {
   };
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  useEffect(() => {
-    editLoadingTrue();
-    axios
-      .get(`${BASE_URL}/${chosenBookId}`)
-      .then((res) => {
-        setChosenBookData(res.data);
-        editLoadingFalse();
-      })
-      .catch((err) => {
-        console.error(err);
-        editLoadingFalse();
-      });
-  }, [chosenBookId]);
   useEffect(() => {
     editLoadingTrue();
     axios
@@ -82,8 +70,19 @@ export default function BookBody() {
     setChosenDeleteBookName(name);
   };
   const handleEditBook = (id: number) => {
+    editLoadingTrue();
+    axios
+      .get(`${BASE_URL}/${id}`)
+      .then((res) => {
+        setChosenBookData(res.data);
+        putInfoToInputs(res.data);
+        editLoadingFalse();
+      })
+      .catch((err) => {
+        console.error(err);
+        editLoadingFalse();
+      });
     setOpenEditModal(true);
-    setChosenBookId(id);
   };
   const handleConfirmDelete = () => {
     editLoadingTrue();

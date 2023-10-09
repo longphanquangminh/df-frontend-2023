@@ -61,13 +61,41 @@ export default function BookModal(props: Props) {
     editInputValue,
     resetInputValue,
     dataChanged,
+    updateInfo,
     changeDataChanged,
     editLoadingTrue,
     editLoadingFalse,
   } = useAppContext();
 
   const handleEditBook = () => {
-    console.log('a');
+    const notGoodName = !(
+      removeExtraSpaces(updateInfo.addBookName).length >= 5
+    );
+    const notGoodAuthor = !lettersSpacesRegex.test(updateInfo.addBookAuthor);
+    if (notGoodName || notGoodAuthor) {
+      setCheckWrongName(notGoodName);
+      setCheckWrongAuthor(notGoodAuthor);
+    } else {
+      props.onClose();
+      editLoadingTrue();
+      axios({
+        url: `${BASE_URL}/${props.chosenBookData?.id}`,
+        method: 'PUT',
+        data: {
+          name: updateInfo.addBookName,
+          author: updateInfo.addBookAuthor,
+          topic: updateInfo.addBookTopic,
+        },
+      })
+        .then(() => {
+          resetInputValue();
+          changeDataChanged(!dataChanged);
+        })
+        .catch((err) => {
+          console.error(err);
+          editLoadingFalse();
+        });
+    }
   };
   const handleAddBook = () => {
     const notGoodName = !(
@@ -138,7 +166,11 @@ export default function BookModal(props: Props) {
                 <BookInput
                   label="Name"
                   name="bookName"
-                  value={appSummaryInfo.addBookName}
+                  value={
+                    props.isEdit
+                      ? updateInfo.addBookName
+                      : appSummaryInfo.addBookName
+                  }
                   onChange={(
                     e:
                       | React.ChangeEvent<HTMLInputElement>
@@ -155,7 +187,11 @@ export default function BookModal(props: Props) {
                 <BookInput
                   label="Author"
                   name="bookAuthor"
-                  value={appSummaryInfo.addBookAuthor}
+                  value={
+                    props.isEdit
+                      ? updateInfo.addBookAuthor
+                      : appSummaryInfo.addBookAuthor
+                  }
                   onChange={(
                     e:
                       | React.ChangeEvent<HTMLInputElement>
@@ -172,7 +208,11 @@ export default function BookModal(props: Props) {
                 <BookInput
                   label="Topic"
                   name="bookTopic"
-                  value={appSummaryInfo.addBookTopic}
+                  value={
+                    props.isEdit
+                      ? updateInfo.addBookTopic
+                      : appSummaryInfo.addBookTopic
+                  }
                   onChange={(
                     e:
                       | React.ChangeEvent<HTMLInputElement>

@@ -10,6 +10,7 @@ import React, {
 } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BOOK_TYPES } from '../constants/bookTypes';
+import IBook from 'app/interfaces/IBook';
 
 interface AppContextInfo {
   addBookName: string;
@@ -19,6 +20,7 @@ interface AppContextInfo {
 
 interface AppContextData {
   appSummaryInfo: AppContextInfo;
+  updateInfo: AppContextInfo;
   isLightMode: boolean;
   dataChanged: boolean;
   searchValue: string;
@@ -30,6 +32,7 @@ interface AppContextData {
   resetInputValue: () => void;
   editLoadingTrue: () => void;
   editLoadingFalse: () => void;
+  putInfoToInputs: (data: IBook) => void;
   changeLightDarkMode: (isLightMode: boolean) => void;
   changeDataChanged: (dataChanged: boolean) => void;
 }
@@ -56,6 +59,9 @@ const defaultValueData = {
 
 export function AppContextProvider({ children }: AppContextProviderProps) {
   const [appSummaryInfo, setAppSummaryInfo] = useState({
+    ...defaultValueData,
+  });
+  const [updateInfo, setUpdateInfo] = useState({
     ...defaultValueData,
   });
   const searchParams = useSearchParams();
@@ -104,10 +110,22 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       ...prevState,
       [fieldName]: value,
     }));
+    setUpdateInfo((prevState) => ({
+      ...prevState,
+      [fieldName]: value,
+    }));
   };
+  const putInfoToInputs = useCallback((data: IBook) => {
+    editInputValue('addBookName', data.name);
+    editInputValue('addBookAuthor', data.author);
+    editInputValue('addBookTopic', data.topic);
+  }, []);
 
   const resetInputValue = () => {
     setAppSummaryInfo({
+      ...defaultValueData,
+    });
+    setUpdateInfo({
       ...defaultValueData,
     });
   };
@@ -132,6 +150,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       searchValue,
       currentPage,
       loading,
+      updateInfo,
       editInputValue,
       resetInputValue,
       changeLightDarkMode,
@@ -140,6 +159,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       editSearchValue,
       editLoadingTrue,
       editLoadingFalse,
+      putInfoToInputs,
     }),
     [
       appSummaryInfo,
@@ -148,8 +168,10 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       searchValue,
       currentPage,
       loading,
+      updateInfo,
       editCurrentPage,
       editSearchValue,
+      putInfoToInputs,
     ]
   );
 

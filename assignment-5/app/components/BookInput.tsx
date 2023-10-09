@@ -105,14 +105,16 @@ export default function BookInput(props: Props) {
         >
           {icon}
         </div>
-        <button
-          onClick={() => setHidePassword(!hidePassword)}
-          className={`${
-            seePasswordOptionClassName || ''
-          } top-8 right-2.5 absolute text-sm cursor-pointer`}
-        >
-          {hidePassword ? labelShowPassword : labelHidePassword}
-        </button>
+        {seePasswordOption && (
+          <button
+            onClick={() => setHidePassword(!hidePassword)}
+            className={`${
+              seePasswordOptionClassName || ''
+            } top-8 right-2.5 absolute text-sm cursor-pointer`}
+          >
+            {hidePassword ? labelShowPassword : labelHidePassword}
+          </button>
+        )}
       </label>
     </div>
   );
