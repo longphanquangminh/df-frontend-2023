@@ -58,6 +58,7 @@ const defaultValueData = {
 };
 
 export function AppContextProvider({ children }: AppContextProviderProps) {
+  const [loading, setLoading] = useState(false);
   const [appSummaryInfo, setAppSummaryInfo] = useState({
     ...defaultValueData,
   });
@@ -70,7 +71,6 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   );
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [dataChanged, setDataChanged] = useState(false);
-  const [loading, setLoading] = useState(false);
   const editLoadingTrue = () => {
     setLoading(true);
   };

@@ -90,7 +90,6 @@ export default function BookBody() {
       .delete(`${BASE_URL}/${chosenBookId}`)
       .then(() => {
         resetChosenBook();
-        editLoadingFalse();
       })
       .catch((err) => {
         console.error(err);

@@ -9,6 +9,7 @@ import { BASE_URL } from '../../constants/baseUrl';
 import IBook from '../../interfaces/IBook';
 import BookButtonText from '../../components/BookButtonText';
 import BookModal from '../../components/BookModal';
+import { useAppContext } from 'app/context/AppContext';
 
 export default function BookViewPage() {
   const { id } = useParams();
@@ -33,7 +34,9 @@ export default function BookViewPage() {
         router.replace('/error');
       });
   }, [id, router]);
+  const { editLoadingTrue } = useAppContext();
   const handleConfirmDelete = () => {
+    editLoadingTrue();
     axios
       .delete(`${BASE_URL}/${chosenDeleteBookId}`)
       .then(() => {

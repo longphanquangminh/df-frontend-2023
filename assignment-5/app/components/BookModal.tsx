@@ -132,12 +132,12 @@ export default function BookModal(props: Props) {
 
   const handleChangeNewBookName = (value: string) => {
     editInputValue('addBookName', value);
-    setCheckWrongName(value.length === 0);
+    setCheckWrongName(removeExtraSpaces(value).length < 5);
   };
 
   const handleChangeNewBookAuthor = (value: string) => {
     editInputValue('addBookAuthor', value);
-    setCheckWrongAuthor(value.length === 0);
+    setCheckWrongAuthor(!lettersSpacesRegex.test(removeExtraSpaces(value)));
   };
 
   return (
