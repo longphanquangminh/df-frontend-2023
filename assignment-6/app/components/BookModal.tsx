@@ -31,6 +31,7 @@ export default function BookModal(props: Props) {
         !(modalRef.current as HTMLElement).contains(e.target as Node)
       ) {
         props.onClose();
+        resetInputValue();
       }
     };
 
