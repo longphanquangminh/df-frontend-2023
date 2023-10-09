@@ -1,6 +1,5 @@
 'use client';
 
-import PasswordStrengthBar from 'react-password-strength-bar-with-style-item';
 import BookButton from 'app/components/BookButton';
 import BookInput from 'app/components/BookInput';
 import { emailRegex } from 'app/regex/emailRegex';
@@ -12,7 +11,6 @@ import { useState } from 'react';
 export default function LoginPage() {
   const [isGoodLoginEmail, setIsGoodLoginEmail] = useState(false);
   const [isGoodLoginPassword, setIsGoodLoginPassword] = useState(false);
-  const [password, checkPassword] = useState('');
   const handleCheckEmail = (value: string) => {
     if (emailRegex.test(value)) {
       setIsGoodLoginEmail(true);
@@ -21,7 +19,6 @@ export default function LoginPage() {
     }
   };
   const handleCheckPassword = (value: string) => {
-    checkPassword(value);
     if (passwordRegex.test(convertAccentedVietnamese(value))) {
       setIsGoodLoginPassword(true);
     } else {
@@ -60,7 +57,6 @@ export default function LoginPage() {
               | React.ChangeEvent<HTMLSelectElement>
           ) => handleCheckPassword(e.target.value)}
         />
-        <PasswordStrengthBar password={password} />
         <BookButton
           disabled={!isGoodLoginPassword || !isGoodLoginEmail}
           className="w-full"

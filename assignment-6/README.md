@@ -6,7 +6,7 @@ Refer to the API documentation at: [**Bookstore API Docs**](https://develop-api.
 
 ## **Requirements**
 
-- Begin by incorporating the functionalities already built in the Next.js application from [Assignment 05](../assignment-5/).
+- Begin by incorporating the functionalities already built in the Next.js application from [Assignment 05](../assignment-6/).
 - Seamlessly integrate the APIs into the UI.
 - Protect all routes, exempting the `/login` route. Unauthorized access to protected routes should redirect the user back to the login page.
 - Incorporate a "Log out" button prominently within the application header. This button should effectively log out the user and redirect to the login page.

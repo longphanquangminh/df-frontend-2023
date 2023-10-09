@@ -32,9 +32,6 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
-  react-password-strength-bar-with-style-item:
-    specifier: ^0.5.3
-    version: 0.5.3(react-dom@18.2.0)(react@18.2.0)
   react-remove-scroll-bar:
     specifier: ^2.3.4
     version: 2.3.4(@types/react@18.2.24)(react@18.2.0)
@@ -6696,17 +6693,6 @@ packages:
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
 
-  /react-password-strength-bar-with-style-item@0.5.3(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-nfGhEi0kHrUMgrpWlVAZeRXAdcy/4+zjXrlDvWP+wrt7c9eC25ChsovJbVq/+u4XRyx5Pw6m7Pgf+Se3lwYYGQ==}
-    peerDependencies:
-      react: '>=16.8.6'
-      react-dom: '>=16.8.6'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      zxcvbn: 4.4.2
-    dev: false
-
   /react-remove-scroll-bar@2.3.4(@types/react@18.2.24)(react@18.2.0):
     resolution: {integrity: sha512-63C4YQBUt0m6ALadE9XV56hV8BgJWDmmTPY758iIJjfQKt2nYwoUrPk0LXRXcB/yIj82T1/Ixfdpdk68LwIB0A==}
     engines: {node: '>=10'}
@@ -7885,7 +7871,3 @@ packages:
   /yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
-
-  /zxcvbn@4.4.2:
-    resolution: {integrity: sha512-Bq0B+ixT/DMyG8kgX2xWcI5jUvCwqrMxSFam7m0lAf78nf04hv6lNCsyLYdyYTrCVMqNDY/206K7eExYCeSyUQ==}
-    dev: false
