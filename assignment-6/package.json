@@ -1,14 +1,19 @@
 {
   "name": "assignment-6",
-  "version": "0.0.0",
-  "license": "MIT",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DF 2023 Assignment 6",
+  "author": "Dwarves Foundation",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dwarvesf/df-frontend-2023.git"
+  },
   "scripts": {
     "start": "nx serve",
     "dev": "nx serve",
     "build": "nx build",
     "test": "nx test"
   },
-  "private": true,
   "dependencies": {
     "@nx/next": "16.10.0",
     "axios": "^1.5.1",
@@ -24,6 +29,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@dwarvesf/react-eslint-config": "^1.0.1",
     "@babel/plugin-transform-classes": "^7.22.15",
     "@nx/eslint-plugin": "16.10.0",
     "@nx/jest": "16.10.0",

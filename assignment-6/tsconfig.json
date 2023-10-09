@@ -8,6 +8,7 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "noImplicitAny": true,
+    "noImplicitThis": true,
     "target": "es2015",
     "module": "esnext",
     "lib": ["es2020", "dom"],
