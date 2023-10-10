@@ -7,6 +7,7 @@ import React, {
   useState,
   ReactNode,
   useCallback,
+  useEffect,
 } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { BOOK_TYPES } from '../constants/bookTypes';
@@ -77,13 +78,13 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   const editLoadingFalse = () => {
     setLoading(false);
   };
-  const [isLightMode, setIsLightMode] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      const storedMode = window.localStorage.getItem('isLightMode');
-      return storedMode !== 'dark';
+  const [isLightMode, setIsLightMode] = useState(true);
+  useEffect(() => {
+    const storedMode = window.localStorage.getItem('isLightMode');
+    if (storedMode !== 'dark') {
+      setIsLightMode(true);
     }
-    return true;
-  });
+  }, []);
   const router = useRouter();
   const editSearchValue = useCallback(
     (value: string) => {
