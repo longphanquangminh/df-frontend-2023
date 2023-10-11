@@ -2,8 +2,14 @@
 
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import { useEffect } from 'react';
+import { useAppContext } from './context/AppContext';
 
 export default function NotFound() {
+  const { editLoadingFalse } = useAppContext();
+  useEffect(() => {
+    editLoadingFalse();
+  });
   return (
     <div className="flex flex-1 justify-center items-center">
       <div className="text-center font-bold space-y-6">

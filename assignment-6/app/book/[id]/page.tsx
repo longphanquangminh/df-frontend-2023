@@ -31,10 +31,10 @@ export default function BookViewPage() {
       })
       .catch((err) => {
         console.error(err);
-        router.replace('/error');
+        router.replace('/not-found');
       });
   }, [id, router]);
-  const { editLoadingTrue } = useAppContext();
+  const { editLoadingTrue, editLoadingFalse } = useAppContext();
   const handleConfirmDelete = () => {
     editLoadingTrue();
     axios
@@ -46,6 +46,9 @@ export default function BookViewPage() {
         console.error(err);
       });
   };
+  useEffect(() => {
+    editLoadingFalse();
+  });
   return (
     <>
       <div className="p-3">

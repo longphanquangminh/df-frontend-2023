@@ -59,7 +59,7 @@ const defaultValueData = {
 };
 
 export function AppContextProvider({ children }: AppContextProviderProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [appSummaryInfo, setAppSummaryInfo] = useState({
     ...defaultValueData,
   });
@@ -78,7 +78,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   const editLoadingFalse = () => {
     setLoading(false);
   };
-  const [isLightMode, setIsLightMode] = useState(true);
+  const [isLightMode, setIsLightMode] = useState(false);
   useEffect(() => {
     const storedMode = window.localStorage.getItem('isLightMode');
     if (storedMode !== 'dark') {
