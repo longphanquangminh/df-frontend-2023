@@ -1,10 +1,9 @@
 import { Search } from 'lucide-react';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import BookButton from './BookButton';
 import BookInput from './BookInput';
 import BookModal from './BookModal';
-import { BASE_URL } from '../constants/baseUrl';
+import { URL_BOOKS } from '../constants/url';
 import removeExtraSpaces from '../utils/removeExtraSpaces';
 import convertAccentedVietnamese from '../utils/convertAccentedVietnamese';
 import IBook from '../interfaces/IBook';
@@ -12,7 +11,8 @@ import Pagination from './Pagination';
 import { useAppContext } from '../context/AppContext';
 import BookButtonText from './BookButtonText';
 import BookButtonLink from './BookButtonLink';
-import { BOOK_TYPES } from 'app/constants/bookTypes';
+import { defaultBookData } from '../constants/defaultValues';
+import { https } from '../api/user/config';
 
 export default function BookBody() {
   const [openAddModal, setOpenAddModal] = useState(false);
@@ -20,12 +20,7 @@ export default function BookBody() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [bookData, setBookData] = useState<IBook[]>([]);
   const [chosenBookId, setChosenBookId] = useState(0);
-  const [chosenBookData, setChosenBookData] = useState({
-    id: 0,
-    name: '',
-    author: '',
-    topic: BOOK_TYPES[0],
-  });
+  const [chosenBookData, setChosenBookData] = useState({ ...defaultBookData });
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('');
   const beautifulTableClass = 'border-2 border-[#c5cfd9] p-2';
   const {
@@ -35,8 +30,6 @@ export default function BookBody() {
     editCurrentPage,
     editSearchValue,
     changeDataChanged,
-    editLoadingTrue,
-    editLoadingFalse,
     putInfoToInputs,
   } = useAppContext();
   const itemsPerPage = 5;
@@ -46,16 +39,13 @@ export default function BookBody() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   useEffect(() => {
-    editLoadingTrue();
-    axios
-      .get(BASE_URL)
+    https
+      .get(URL_BOOKS)
       .then((res) => {
-        setBookData([...res.data]);
-        editLoadingFalse();
+        setBookData([...res.data.data]);
       })
       .catch((err) => {
         console.error(err);
-        editLoadingFalse();
       });
   }, [dataChanged]);
 
@@ -70,30 +60,25 @@ export default function BookBody() {
     setChosenDeleteBookName(name);
   };
   const handleEditBook = (id: number) => {
-    editLoadingTrue();
-    axios
-      .get(`${BASE_URL}/${id}`)
+    https
+      .get(`${URL_BOOKS}/${id}`)
       .then((res) => {
-        setChosenBookData(res.data);
-        putInfoToInputs(res.data);
-        editLoadingFalse();
+        setChosenBookData(res.data.data);
+        putInfoToInputs(res.data.data);
       })
       .catch((err) => {
         console.error(err);
-        editLoadingFalse();
       });
     setOpenEditModal(true);
   };
   const handleConfirmDelete = () => {
-    editLoadingTrue();
-    axios
-      .delete(`${BASE_URL}/${chosenBookId}`)
+    https
+      .delete(`${URL_BOOKS}/${chosenBookId}`)
       .then(() => {
         resetChosenBook();
       })
       .catch((err) => {
         console.error(err);
-        editLoadingFalse();
       });
   };
   const bookDataAfterFilter = [
@@ -108,7 +93,9 @@ export default function BookBody() {
         convertAccentedVietnamese(item.author.toLowerCase()).includes(
           userSearch
         ) ||
-        convertAccentedVietnamese(item.topic.toLowerCase()).includes(userSearch)
+        convertAccentedVietnamese(item.topic.name.toLowerCase()).includes(
+          userSearch
+        )
       );
     }),
   ];
@@ -161,7 +148,9 @@ export default function BookBody() {
                       >
                         <td className={beautifulTableClass}>{item.name}</td>
                         <td className={beautifulTableClass}>{item.author}</td>
-                        <td className={beautifulTableClass}>{item.topic}</td>
+                        <td className={beautifulTableClass}>
+                          {item.topic.name}
+                        </td>
                         <td className={beautifulTableClass}>
                           <div className="flex gap-x-2">
                             <BookButtonText
@@ -202,7 +191,10 @@ export default function BookBody() {
             />
           </div>
         ) : (
-          <p className="text-center">There are no books available!</p>
+          <p className="text-center">
+            There are no books available! Try to add, refresh, delete search
+            input or login!
+          </p>
         )}
       </div>
       {openDeleteModal && (

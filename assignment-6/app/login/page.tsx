@@ -1,19 +1,29 @@
 'use client';
 
 import PasswordStrengthBar from 'react-password-strength-bar-with-style-item';
-import BookButton from 'app/components/BookButton';
-import BookInput from 'app/components/BookInput';
-import { emailRegex } from 'app/regex/emailRegex';
-import { passwordRegex } from 'app/regex/passwordRegex';
-import convertAccentedVietnamese from 'app/utils/convertAccentedVietnamese';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppContext } from '../context/AppContext';
+import { loadingTimeout } from '../constants/variables';
+import { emailRegex } from '../regex/emailRegex';
+import convertAccentedVietnamese from '../utils/convertAccentedVietnamese';
+import { https } from '../api/user/config';
+import BookInput from '../components/BookInput';
+import BookButton from '../components/BookButton';
+import { passwordRegex } from '../regex/passwordRegex';
 
 export default function LoginPage() {
   const [isGoodLoginEmail, setIsGoodLoginEmail] = useState(false);
   const [isGoodLoginPassword, setIsGoodLoginPassword] = useState(false);
-  const [password, checkPassword] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { editLoadingFalse, setUserLogin } = useAppContext();
+  useEffect(() => {
+    setTimeout(() => {
+      editLoadingFalse();
+    }, loadingTimeout);
+  }, []);
   const handleCheckEmail = (value: string) => {
+    setUserEmail(value);
     if (emailRegex.test(value)) {
       setIsGoodLoginEmail(true);
     } else {
@@ -21,14 +31,28 @@ export default function LoginPage() {
     }
   };
   const handleCheckPassword = (value: string) => {
-    checkPassword(value);
+    setPassword(value);
     if (passwordRegex.test(convertAccentedVietnamese(value))) {
       setIsGoodLoginPassword(true);
     } else {
       setIsGoodLoginPassword(false);
     }
   };
-  const router = useRouter();
+  const handleSubmit = () => {
+    https
+      .post(`/auth/login`, {
+        email: userEmail,
+        password: password,
+      })
+      .then((res) => {
+        setUserLogin(res.data.data);
+        window.location.href = '/';
+      })
+      .catch((err) => {
+        console.error(err);
+        alert('Your login info is not correct! Please check sir');
+      });
+  };
   return (
     <div className="flex flex-1 justify-center items-center">
       <div className="m-6 w-96 bg-white border-2 border-[#c5cfd9] py-6 px-3 space-y-9">
@@ -64,10 +88,7 @@ export default function LoginPage() {
         <BookButton
           disabled={!isGoodLoginPassword || !isGoodLoginEmail}
           className="w-full"
-          onClick={() => {
-            alert('Login successfully!');
-            router.replace('/');
-          }}
+          onClick={handleSubmit}
         >
           Login
         </BookButton>

@@ -1,15 +1,16 @@
 'use client';
 
-import axios from 'axios';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { BASE_URL } from '../../constants/baseUrl';
+import { URL_BOOKS } from '../../constants/url';
 import IBook from '../../interfaces/IBook';
 import BookButtonText from '../../components/BookButtonText';
 import BookModal from '../../components/BookModal';
-import { useAppContext } from 'app/context/AppContext';
+import { useAppContext } from '../../context/AppContext';
+import { loadingTimeout } from '../../constants/variables';
+import { https } from '../../api/user/config';
 
 export default function BookViewPage() {
   const { id } = useParams();
@@ -24,10 +25,10 @@ export default function BookViewPage() {
     setChosenDeleteBookName(name);
   };
   useEffect(() => {
-    axios
-      .get(`${BASE_URL}/${id}`)
+    https
+      .get(`${URL_BOOKS}/${id}`)
       .then((res) => {
-        setViewBookData(res.data);
+        setViewBookData(res.data.data);
       })
       .catch((err) => {
         console.error(err);
@@ -37,8 +38,8 @@ export default function BookViewPage() {
   const { editLoadingTrue, editLoadingFalse } = useAppContext();
   const handleConfirmDelete = () => {
     editLoadingTrue();
-    axios
-      .delete(`${BASE_URL}/${chosenDeleteBookId}`)
+    https
+      .delete(`${URL_BOOKS}/${chosenDeleteBookId}`)
       .then(() => {
         router.replace('/');
       })
@@ -47,7 +48,9 @@ export default function BookViewPage() {
       });
   };
   useEffect(() => {
-    editLoadingFalse();
+    setTimeout(() => {
+      editLoadingFalse();
+    }, loadingTimeout);
   });
   return (
     <>
@@ -75,7 +78,7 @@ export default function BookViewPage() {
               </p>
               <p>
                 <span className="font-bold">Topic: </span>
-                <span>{viewBookData.topic}</span>
+                <span>{viewBookData.topic.name}</span>
               </p>
             </div>
             <div>

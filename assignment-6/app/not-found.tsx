@@ -4,11 +4,14 @@ import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { useEffect } from 'react';
 import { useAppContext } from './context/AppContext';
+import { loadingTimeout } from './constants/variables';
 
 export default function NotFound() {
   const { editLoadingFalse } = useAppContext();
   useEffect(() => {
-    editLoadingFalse();
+    setTimeout(() => {
+      editLoadingFalse();
+    }, loadingTimeout);
   });
   return (
     <div className="flex flex-1 justify-center items-center">

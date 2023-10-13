@@ -10,13 +10,18 @@ import React, {
   useEffect,
 } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { BOOK_TYPES } from '../constants/bookTypes';
-import IBook from 'app/interfaces/IBook';
+import IUser from '../interfaces/IUser';
+import IBook from '../interfaces/IBook';
+import { defaultValueData, emptyUserInfo } from '../constants/defaultValues';
+import ITopic from '../interfaces/ITopic';
+import axios from 'axios';
+import { BASE_URL } from '../constants/url';
+import { userLocalStorage } from 'app/api/user/localService';
 
 interface AppContextInfo {
   addBookName: string;
   addBookAuthor: string;
-  addBookTopic: string;
+  addBookTopic: number | string;
 }
 
 interface AppContextData {
@@ -27,12 +32,15 @@ interface AppContextData {
   searchValue: string;
   currentPage: number;
   loading: boolean;
+  userInfo: IUser;
+  bookTopics: ITopic[] | undefined;
   editInputValue: (fieldName: string, value: string) => void;
   editSearchValue: (value: string) => void;
   editCurrentPage: (value: number) => void;
   resetInputValue: () => void;
   editLoadingTrue: () => void;
   editLoadingFalse: () => void;
+  setUserLogin: (data: IUser) => void;
   putInfoToInputs: (data: IBook) => void;
   changeLightDarkMode: (isLightMode: boolean) => void;
   changeDataChanged: (dataChanged: boolean) => void;
@@ -52,17 +60,36 @@ interface AppContextProviderProps {
   children: ReactNode;
 }
 
-const defaultValueData = {
-  addBookName: '',
-  addBookAuthor: '',
-  addBookTopic: BOOK_TYPES[0],
-};
-
 export function AppContextProvider({ children }: AppContextProviderProps) {
   const [loading, setLoading] = useState(true);
-  const [appSummaryInfo, setAppSummaryInfo] = useState({
-    ...defaultValueData,
-  });
+  const [bookTopics, setBookTopics] = useState<ITopic[]>();
+  const [userInfo, setUserInfo] = useState<IUser>(emptyUserInfo);
+  useEffect(() => {
+    const storedUserInfo = userLocalStorage.get();
+    if (storedUserInfo?.accessToken !== undefined) {
+      setUserInfo({ ...storedUserInfo });
+    }
+  }, []);
+  useEffect(() => {
+    const data = userLocalStorage.get();
+    axios
+      .get(`${BASE_URL}/topics`, {
+        headers: {
+          Authorization: 'Bearer ' + data?.accessToken,
+        },
+      })
+      .then((res) => {
+        setBookTopics(res.data.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }, []);
+  const setUserLogin = (data: IUser) => {
+    setUserInfo(data);
+    userLocalStorage.set(data);
+  };
+  const [appSummaryInfo, setAppSummaryInfo] = useState({ ...defaultValueData });
   const [updateInfo, setUpdateInfo] = useState({
     ...defaultValueData,
   });
@@ -106,7 +133,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
     },
     [router, searchValue]
   );
-  const editInputValue = (fieldName: string, value: string) => {
+  const editInputValue = (fieldName: string, value: string | number) => {
     setAppSummaryInfo((prevState) => ({
       ...prevState,
       [fieldName]: value,
@@ -119,7 +146,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
   const putInfoToInputs = useCallback((data: IBook) => {
     editInputValue('addBookName', data.name);
     editInputValue('addBookAuthor', data.author);
-    editInputValue('addBookTopic', data.topic);
+    editInputValue('addBookTopic', data.topic.id);
   }, []);
 
   const resetInputValue = () => {
@@ -152,6 +179,9 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       currentPage,
       loading,
       updateInfo,
+      userInfo,
+      bookTopics,
+      setUserLogin,
       editInputValue,
       resetInputValue,
       changeLightDarkMode,
@@ -170,6 +200,8 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       currentPage,
       loading,
       updateInfo,
+      userInfo,
+      bookTopics,
       editCurrentPage,
       editSearchValue,
       putInfoToInputs,

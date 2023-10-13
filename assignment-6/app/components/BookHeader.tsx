@@ -3,11 +3,21 @@
 import Link from 'next/link';
 import { UserCircle2 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
+import { useRouter } from 'next/navigation';
+import { emptyUserInfo } from '../constants/defaultValues';
+import { userLocalStorage } from 'app/api/user/localService';
 
 export default function BookHeader() {
-  const { isLightMode, changeLightDarkMode } = useAppContext();
+  const { isLightMode, changeLightDarkMode, userInfo, setUserLogin } =
+    useAppContext();
   const flexCenterAll =
     'flex md:flex gap-3 md:justify-between items-center place-self-center';
+  const router = useRouter();
+  const handleLogout = () => {
+    setUserLogin(emptyUserInfo);
+    userLocalStorage.remove();
+    router.replace('/login');
+  };
   return (
     <div
       className={`${flexCenterAll} p-3 text-xl ${
@@ -51,15 +61,27 @@ export default function BookHeader() {
             {isLightMode ? 'Light' : 'Dark'} mode
           </div>
         </div>
-        <Link
-          href="/login"
-          className={`${flexCenterAll} ${
-            isLightMode ? 'text-black' : 'text-white'
-          } duration-300`}
-        >
-          <UserCircle2 />
-          Login
-        </Link>
+        {userInfo.accessToken !== '' ? (
+          <button
+            onClick={handleLogout}
+            className={`${flexCenterAll} ${
+              isLightMode ? 'text-black' : 'text-white'
+            } duration-300`}
+          >
+            <UserCircle2 />
+            Logout
+          </button>
+        ) : (
+          <Link
+            href="/login"
+            className={`${flexCenterAll} ${
+              isLightMode ? 'text-black' : 'text-white'
+            } duration-300`}
+          >
+            <UserCircle2 />
+            Login
+          </Link>
+        )}
       </div>
     </div>
   );

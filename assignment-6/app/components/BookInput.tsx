@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useState } from 'react';
+import ITopic from '../interfaces/ITopic';
 
 type Props = {
   name?: string;
@@ -12,11 +13,11 @@ type Props = {
       | React.ChangeEvent<HTMLSelectElement>
   ) => void;
   placeholder?: string;
-  value?: string;
+  value?: string | number;
   icon?: React.ReactNode;
   iconClassName?: string;
   className?: string;
-  selectOptionValues?: string[];
+  selectOptionValues?: ITopic[] | undefined;
   seePasswordOption?: boolean;
   seePasswordOptionClassName?: string;
 };
@@ -93,9 +94,9 @@ export default function BookInput(props: Props) {
             id={name}
             name={name}
           >
-            {selectOptionValues.map((item, index) => (
-              <option key={index} value={item} id={item}>
-                {item}
+            {selectOptionValues.map((item: ITopic, index) => (
+              <option key={index} value={item.id} id={item.id.toString()}>
+                {item.name}
               </option>
             ))}
           </select>

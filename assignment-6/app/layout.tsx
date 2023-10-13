@@ -3,6 +3,8 @@ import { AppContextProvider } from './context/AppContext';
 import './global.css';
 import Loading from './components/Loading';
 import BookHeader from './components/BookHeader';
+import AxiosSetup from './components/AxiosSetup';
+import PrivateRoute from './components/PrivateRoute';
 
 export const metadata = {
   title: 'Welcome to assignment-6',
@@ -20,12 +22,15 @@ export default function RootLayout({
         <AppContextProvider>
           <Suspense fallback={<Loading />}>
             <Loading />
-            <div className="flex flex-col min-h-screen bg-[#f7f8fa]">
-              <div>
-                <BookHeader />
+            <AxiosSetup />
+            <PrivateRoute>
+              <div className="flex flex-col min-h-screen bg-[#f7f8fa]">
+                <div>
+                  <BookHeader />
+                </div>
+                {children}
               </div>
-              {children}
-            </div>
+            </PrivateRoute>
           </Suspense>
         </AppContextProvider>
       </body>

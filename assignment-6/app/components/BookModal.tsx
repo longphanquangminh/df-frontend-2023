@@ -1,15 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
 import { RemoveScrollBar } from 'react-remove-scroll-bar';
 import { X } from 'lucide-react';
 import BookButton from './BookButton';
 import BookInput from './BookInput';
-import { BOOK_TYPES } from '../constants/bookTypes';
-import { BASE_URL } from '../constants/baseUrl';
+import { URL_BOOKS } from '../constants/url';
 import { useAppContext } from '../context/AppContext';
-import IBook from 'app/interfaces/IBook';
-import removeExtraSpaces from 'app/utils/removeExtraSpaces';
-import { lettersSpacesRegex } from 'app/regex/lettersSpacesRegex';
+import IBook from '../interfaces/IBook';
+import removeExtraSpaces from '../utils/removeExtraSpaces';
+import { lettersSpacesRegex } from '../regex/lettersSpacesRegex';
+import { https } from '../api/user/config';
 
 type Props = {
   onClose: () => void;
@@ -63,6 +62,7 @@ export default function BookModal(props: Props) {
     resetInputValue,
     dataChanged,
     updateInfo,
+    bookTopics,
     changeDataChanged,
     editLoadingTrue,
     editLoadingFalse,
@@ -79,13 +79,13 @@ export default function BookModal(props: Props) {
     } else {
       props.onClose();
       editLoadingTrue();
-      axios({
-        url: `${BASE_URL}/${props.chosenBookData?.id}`,
+      https({
+        url: `${URL_BOOKS}/${props.chosenBookData?.id}`,
         method: 'PUT',
         data: {
           name: updateInfo.addBookName,
           author: updateInfo.addBookAuthor,
-          topic: updateInfo.addBookTopic,
+          topicId: Number(updateInfo.addBookTopic),
         },
       })
         .then(() => {
@@ -111,13 +111,13 @@ export default function BookModal(props: Props) {
     } else {
       props.onClose();
       editLoadingTrue();
-      axios({
-        url: BASE_URL,
+      https({
+        url: URL_BOOKS,
         method: 'POST',
         data: {
           name: appSummaryInfo.addBookName,
           author: appSummaryInfo.addBookAuthor,
-          topic: appSummaryInfo.addBookTopic,
+          topicId: Number(appSummaryInfo.addBookTopic),
         },
       })
         .then(() => {
@@ -218,7 +218,7 @@ export default function BookModal(props: Props) {
                       | React.ChangeEvent<HTMLInputElement>
                       | React.ChangeEvent<HTMLSelectElement>
                   ) => editInputValue('addBookTopic', e.target.value)}
-                  selectOptionValues={BOOK_TYPES}
+                  selectOptionValues={bookTopics}
                 />
               </div>
               <div className="flex justify-end">
