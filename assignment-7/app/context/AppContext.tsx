@@ -10,13 +10,11 @@ import React, {
   useEffect,
 } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import IUser from '../interfaces/IUser';
-import IBook from '../interfaces/IBook';
 import { defaultValueData, emptyUserInfo } from '../constants/defaultValues';
-import ITopic from '../interfaces/ITopic';
 import axios from 'axios';
 import { BASE_URL } from '../constants/url';
-import { userLocalStorage } from 'app/api/user/localService';
+import { userLocalStorage } from '../api/user/localService';
+import { Book, Topic, Auth } from '../generated/bookstore';
 
 interface AppContextInfo {
   addBookName: string;
@@ -32,16 +30,16 @@ interface AppContextData {
   searchValue: string;
   currentPage: number;
   loading: boolean;
-  userInfo: IUser;
-  bookTopics: ITopic[] | undefined;
+  userInfo: Auth;
+  bookTopics: Topic[] | undefined;
   editInputValue: (fieldName: string, value: string) => void;
   editSearchValue: (value: string) => void;
   editCurrentPage: (value: number) => void;
   resetInputValue: () => void;
   editLoadingTrue: () => void;
   editLoadingFalse: () => void;
-  setUserLogin: (data: IUser) => void;
-  putInfoToInputs: (data: IBook) => void;
+  setUserLogin: (data: Auth) => void;
+  putInfoToInputs: (data: Book) => void;
   changeLightDarkMode: (isLightMode: boolean) => void;
   changeDataChanged: (dataChanged: boolean) => void;
 }
@@ -62,8 +60,8 @@ interface AppContextProviderProps {
 
 export function AppContextProvider({ children }: AppContextProviderProps) {
   const [loading, setLoading] = useState(true);
-  const [bookTopics, setBookTopics] = useState<ITopic[]>();
-  const [userInfo, setUserInfo] = useState<IUser>(emptyUserInfo);
+  const [bookTopics, setBookTopics] = useState<Topic[]>();
+  const [userInfo, setUserInfo] = useState<Auth>(emptyUserInfo);
   useEffect(() => {
     const storedUserInfo = userLocalStorage.get();
     if (storedUserInfo?.accessToken !== undefined) {
@@ -85,7 +83,7 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
         console.error(err);
       });
   }, []);
-  const setUserLogin = (data: IUser) => {
+  const setUserLogin = (data: Auth) => {
     setUserInfo(data);
     userLocalStorage.set(data);
   };
@@ -143,10 +141,10 @@ export function AppContextProvider({ children }: AppContextProviderProps) {
       [fieldName]: value,
     }));
   };
-  const putInfoToInputs = useCallback((data: IBook) => {
+  const putInfoToInputs = useCallback((data: Book) => {
     editInputValue('addBookName', data.name);
-    editInputValue('addBookAuthor', data.author);
-    editInputValue('addBookTopic', data.topic.id);
+    editInputValue('addBookAuthor', data.author || '');
+    editInputValue('addBookTopic', data.topic?.id || 1);
   }, []);
 
   const resetInputValue = () => {

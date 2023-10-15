@@ -6,19 +6,19 @@ import BookModal from './BookModal';
 import { URL_BOOKS } from '../constants/url';
 import removeExtraSpaces from '../utils/removeExtraSpaces';
 import convertAccentedVietnamese from '../utils/convertAccentedVietnamese';
-import IBook from '../interfaces/IBook';
 import Pagination from './Pagination';
 import { useAppContext } from '../context/AppContext';
 import BookButtonText from './BookButtonText';
 import BookButtonLink from './BookButtonLink';
 import { defaultBookData } from '../constants/defaultValues';
 import { https } from '../api/user/config';
+import { Book } from 'app/generated/bookstore';
 
 export default function BookBody() {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [bookData, setBookData] = useState<IBook[]>([]);
+  const [bookData, setBookData] = useState<Book[]>([]);
   const [chosenBookId, setChosenBookId] = useState(0);
   const [chosenBookData, setChosenBookData] = useState({ ...defaultBookData });
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('');
@@ -82,7 +82,7 @@ export default function BookBody() {
       });
   };
   const bookDataAfterFilter = [
-    ...bookData.filter((item: IBook) => {
+    ...bookData.filter((item: Book) => {
       const userSearch = removeExtraSpaces(
         convertAccentedVietnamese(searchValue.toLowerCase())
       );
@@ -90,12 +90,12 @@ export default function BookBody() {
         convertAccentedVietnamese(item.name.toLowerCase()).includes(
           userSearch
         ) ||
-        convertAccentedVietnamese(item.author.toLowerCase()).includes(
-          userSearch
-        ) ||
-        convertAccentedVietnamese(item.topic.name.toLowerCase()).includes(
-          userSearch
-        )
+        convertAccentedVietnamese(item?.author ?? '')
+          .toLowerCase()
+          .includes(userSearch) ||
+        convertAccentedVietnamese(item?.topic?.name ?? '')
+          .toLowerCase()
+          .includes(userSearch)
       );
     }),
   ];
@@ -141,7 +141,7 @@ export default function BookBody() {
                 <tbody>
                   {bookDataAfterFilter
                     .slice(startIndex, endIndex)
-                    .map((item: IBook, index) => (
+                    .map((item: Book, index) => (
                       <tr
                         className="bg-white hover:bg-[#f7f8fa] duration-300"
                         key={index}
@@ -149,7 +149,7 @@ export default function BookBody() {
                         <td className={beautifulTableClass}>{item.name}</td>
                         <td className={beautifulTableClass}>{item.author}</td>
                         <td className={beautifulTableClass}>
-                          {item.topic.name}
+                          {item.topic?.name || 'No topic'}
                         </td>
                         <td className={beautifulTableClass}>
                           <div className="flex gap-x-2">

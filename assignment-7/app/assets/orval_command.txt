@@ -1,0 +1,1 @@
+orval --input https://develop-api.bookstore.dwarvesf.com/swagger/doc.json --output ../assignment-7/app/generated/bookstore.ts

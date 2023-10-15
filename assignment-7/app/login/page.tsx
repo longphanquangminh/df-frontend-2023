@@ -21,7 +21,7 @@ export default function LoginPage() {
     setTimeout(() => {
       editLoadingFalse();
     }, loadingTimeout);
-  }, []);
+  });
   const handleCheckEmail = (value: string) => {
     setUserEmail(value);
     if (emailRegex.test(value)) {
@@ -50,7 +50,7 @@ export default function LoginPage() {
       })
       .catch((err) => {
         console.error(err);
-        alert('Your login info is not correct! Please check sir');
+        alert('Your login info is not correct or 503 error');
       });
   };
   return (

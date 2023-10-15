@@ -5,16 +5,16 @@ import { ChevronLeft } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { URL_BOOKS } from '../../constants/url';
-import IBook from '../../interfaces/IBook';
 import BookButtonText from '../../components/BookButtonText';
 import BookModal from '../../components/BookModal';
 import { useAppContext } from '../../context/AppContext';
 import { loadingTimeout } from '../../constants/variables';
 import { https } from '../../api/user/config';
+import { Book } from 'app/generated/bookstore';
 
 export default function BookViewPage() {
   const { id } = useParams();
-  const [viewBookData, setViewBookData] = useState<IBook>();
+  const [viewBookData, setViewBookData] = useState<Book>();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [chosenDeleteBookId, setChosenDeleteBookId] = useState(0);
   const [chosenDeleteBookName, setChosenDeleteBookName] = useState('');
@@ -74,11 +74,11 @@ export default function BookViewPage() {
             <div>
               <p>
                 <span className="font-bold">Author: </span>
-                <span>{viewBookData.author}</span>
+                <span>{viewBookData.author || 'No author'}</span>
               </p>
               <p>
                 <span className="font-bold">Topic: </span>
-                <span>{viewBookData.topic.name}</span>
+                <span>{viewBookData.topic?.name || 'No topic'}</span>
               </p>
             </div>
             <div>

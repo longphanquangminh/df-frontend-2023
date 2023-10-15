@@ -1,13 +1,13 @@
-import IUser from '../interfaces/IUser';
+import { Auth } from '../generated/bookstore';
 
 export const defaultValueData = {
   addBookName: '',
   addBookAuthor: '',
-  addBookTopic: '',
+  addBookTopic: 1,
 };
 
 export const defaultTopicData = {
-  id: 0,
+  id: 1,
   name: '',
   code: '',
 };
@@ -21,8 +21,8 @@ export const defaultBookData = {
   },
 };
 
-export const emptyUserInfo: IUser = {
-  id: '',
+export const emptyUserInfo: Auth = {
+  id: 0,
   email: '',
   accessToken: '',
 };

@@ -1,6 +1,6 @@
+import { Topic } from 'app/generated/bookstore';
 import classNames from 'classnames';
 import { useState } from 'react';
-import ITopic from '../interfaces/ITopic';
 
 type Props = {
   name?: string;
@@ -17,7 +17,7 @@ type Props = {
   icon?: React.ReactNode;
   iconClassName?: string;
   className?: string;
-  selectOptionValues?: ITopic[] | undefined;
+  selectOptionValues?: Topic[] | undefined;
   seePasswordOption?: boolean;
   seePasswordOptionClassName?: string;
 };
@@ -94,8 +94,8 @@ export default function BookInput(props: Props) {
             id={name}
             name={name}
           >
-            {selectOptionValues.map((item: ITopic, index) => (
-              <option key={index} value={item.id} id={item.id.toString()}>
+            {selectOptionValues.map((item: Topic, index) => (
+              <option key={index} value={item.id}>
                 {item.name}
               </option>
             ))}

@@ -1,11 +1,11 @@
-import IUser from '../../interfaces/IUser';
+import { Auth } from 'app/generated/bookstore';
 
 export const userLocalStorage = {
-  get: (): IUser | null => {
+  get: (): Auth | null => {
     if (typeof window === 'undefined') return null;
     return JSON.parse(window.localStorage.getItem('USER') || '{}');
   },
-  set: (user: IUser): void => {
+  set: (user: Auth): void => {
     window.localStorage.setItem('USER', JSON.stringify(user));
   },
   remove: (): void => {

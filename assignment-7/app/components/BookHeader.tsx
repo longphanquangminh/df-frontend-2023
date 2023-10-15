@@ -5,7 +5,7 @@ import { UserCircle2 } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { useRouter } from 'next/navigation';
 import { emptyUserInfo } from '../constants/defaultValues';
-import { userLocalStorage } from 'app/api/user/localService';
+import { userLocalStorage } from '../api/user/localService';
 
 export default function BookHeader() {
   const { isLightMode, changeLightDarkMode, userInfo, setUserLogin } =
@@ -61,7 +61,7 @@ export default function BookHeader() {
             {isLightMode ? 'Light' : 'Dark'} mode
           </div>
         </div>
-        {userInfo.accessToken !== '' ? (
+        {userInfo.email !== '' ? (
           <button
             onClick={handleLogout}
             className={`${flexCenterAll} ${

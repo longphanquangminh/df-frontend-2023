@@ -5,17 +5,17 @@ import BookButton from './BookButton';
 import BookInput from './BookInput';
 import { URL_BOOKS } from '../constants/url';
 import { useAppContext } from '../context/AppContext';
-import IBook from '../interfaces/IBook';
 import removeExtraSpaces from '../utils/removeExtraSpaces';
 import { lettersSpacesRegex } from '../regex/lettersSpacesRegex';
 import { https } from '../api/user/config';
+import { Book } from 'app/generated/bookstore';
 
 type Props = {
   onClose: () => void;
   className?: string;
   deleteBook?: [string | number, string, () => void];
   isEdit?: boolean;
-  chosenBookData?: IBook;
+  chosenBookData?: Book;
 };
 
 export default function BookModal(props: Props) {
@@ -47,7 +47,7 @@ export default function BookModal(props: Props) {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [props]);
+  });
 
   const handleDeleteBook = () => {
     if (props.deleteBook && props.deleteBook.length > 0) {
