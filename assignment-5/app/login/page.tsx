@@ -1,6 +1,5 @@
 'use client';
 
-import PasswordStrengthBar from 'react-password-strength-bar-with-style-item';
 import BookButton from 'app/components/BookButton';
 import BookInput from 'app/components/BookInput';
 import { emailRegex } from 'app/regex/emailRegex';
@@ -8,6 +7,7 @@ import { passwordRegex } from 'app/regex/passwordRegex';
 import convertAccentedVietnamese from 'app/utils/convertAccentedVietnamese';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [isGoodLoginEmail, setIsGoodLoginEmail] = useState(false);
@@ -60,7 +60,6 @@ export default function LoginPage() {
               | React.ChangeEvent<HTMLSelectElement>
           ) => handleCheckPassword(e.target.value)}
         />
-        <PasswordStrengthBar password={password} />
         <BookButton
           disabled={!isGoodLoginPassword || !isGoodLoginEmail}
           className="w-full"
@@ -71,6 +70,15 @@ export default function LoginPage() {
         >
           Login
         </BookButton>
+        <p className="text-center">
+          {"Don't have account?"}{' '}
+          <Link
+            className="text-[#d2455b] hover:text-[#FF5571] duration-300"
+            href="/register"
+          >
+            Register
+          </Link>
+        </p>
       </div>
     </div>
   );
