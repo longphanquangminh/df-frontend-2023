@@ -1,4 +1,4 @@
-import { Topic } from 'app/generated/bookstore';
+import { Topic } from '../api/generated/orval';
 import classNames from 'classnames';
 import { useState } from 'react';
 

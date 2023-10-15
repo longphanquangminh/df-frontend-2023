@@ -12,7 +12,7 @@ import BookButtonText from './BookButtonText';
 import BookButtonLink from './BookButtonLink';
 import { defaultBookData } from '../constants/defaultValues';
 import { https } from '../api/user/config';
-import { Book } from 'app/generated/bookstore';
+import { Book } from '../api/generated/orval';
 
 export default function BookBody() {
   const [openAddModal, setOpenAddModal] = useState(false);

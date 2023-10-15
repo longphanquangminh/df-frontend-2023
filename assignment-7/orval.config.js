@@ -5,9 +5,9 @@ module.exports = {
       validation: false,
     },
     output: {
-      mode: 'tags-split',
-      target: './src/api/orval/bookstore.ts',
-      schemas: './src/api/orval/model',
+      workspace: './app/api/generated/orval/',
+      target: './bookstore.ts',
+      mode: 'tags',
     },
   },
 };

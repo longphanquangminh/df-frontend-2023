@@ -1,4 +1,4 @@
-import { Auth } from 'app/generated/bookstore';
+import { Auth } from '../generated/orval';
 
 export const userLocalStorage = {
   get: (): Auth | null => {

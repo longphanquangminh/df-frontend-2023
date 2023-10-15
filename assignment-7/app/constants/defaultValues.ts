@@ -1,4 +1,4 @@
-import { Auth } from '../generated/bookstore';
+import { Auth } from '../api/generated/orval';
 
 export const defaultValueData = {
   addBookName: '',

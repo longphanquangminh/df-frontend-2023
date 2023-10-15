@@ -10,7 +10,7 @@ import BookModal from '../../components/BookModal';
 import { useAppContext } from '../../context/AppContext';
 import { loadingTimeout } from '../../constants/variables';
 import { https } from '../../api/user/config';
-import { Book } from 'app/generated/bookstore';
+import { Book } from '../../api/generated/orval';
 
 export default function BookViewPage() {
   const { id } = useParams();

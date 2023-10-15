@@ -8,7 +8,7 @@ import { useAppContext } from '../context/AppContext';
 import removeExtraSpaces from '../utils/removeExtraSpaces';
 import { lettersSpacesRegex } from '../regex/lettersSpacesRegex';
 import { https } from '../api/user/config';
-import { Book } from 'app/generated/bookstore';
+import { Book } from '../api/generated/orval';
 
 type Props = {
   onClose: () => void;

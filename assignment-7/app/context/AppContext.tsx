@@ -14,7 +14,7 @@ import { defaultValueData, emptyUserInfo } from '../constants/defaultValues';
 import axios from 'axios';
 import { BASE_URL } from '../constants/url';
 import { userLocalStorage } from '../api/user/localService';
-import { Book, Topic, Auth } from '../generated/bookstore';
+import { Book, Topic, Auth } from '../api/generated/orval';
 
 interface AppContextInfo {
   addBookName: string;
