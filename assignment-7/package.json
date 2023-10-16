@@ -9,10 +9,10 @@
     "url": "git+https://github.com/dwarvesf/df-frontend-2023.git"
   },
   "scripts": {
-    "start": "nx serve",
-    "dev": "nx serve",
-    "build": "nx build",
-    "test": "nx test",
+    "start": "npx nx serve",
+    "dev": "npx nx serve",
+    "build": "npx nx build",
+    "test": "npx nx test",
     "generate:api": "npx orval --config ./orval.config.js"
   },
   "dependencies": {
