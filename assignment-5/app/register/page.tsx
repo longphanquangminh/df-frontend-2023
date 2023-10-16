@@ -18,6 +18,7 @@ export default function RegisterPage() {
   const [password, checkPassword] = useState('');
   const [confirmPassword, checkConfirmPassword] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [fullName, setFullName] = useState('');
   const handleCheckEmail = (value: string) => {
     if (emailRegex.test(value)) {
       setIsGoodRegisterEmail(true);
@@ -64,6 +65,18 @@ export default function RegisterPage() {
               | React.ChangeEvent<HTMLInputElement>
               | React.ChangeEvent<HTMLSelectElement>
           ) => handleCheckEmail(e.target.value)}
+        />
+        <BookInput
+          required={true}
+          label="Full name"
+          name="fullName"
+          type="text"
+          placeholder="Enter your full name"
+          onChange={(
+            e:
+              | React.ChangeEvent<HTMLInputElement>
+              | React.ChangeEvent<HTMLSelectElement>
+          ) => setFullName(e.target.value)}
         />
         <BookInput
           required={false}
