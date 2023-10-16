@@ -121,7 +121,8 @@ export default function RegisterPage() {
           disabled={
             !isGoodRegisterPassword ||
             !isGoodRegisterConfirmPassword ||
-            !isGoodRegisterEmail
+            !isGoodRegisterEmail ||
+            fullName === ''
           }
           className="w-full"
           onClick={() => {
