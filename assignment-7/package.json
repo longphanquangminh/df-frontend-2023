@@ -13,7 +13,7 @@
     "dev": "nx serve",
     "build": "nx build",
     "test": "nx test",
-    "generate:api": "orval --config ./orval.config.js"
+    "generate:api": "npx orval --config ./orval.config.js"
   },
   "dependencies": {
     "@nx/next": "16.10.0",
@@ -59,7 +59,6 @@
     "jest-environment-jsdom": "^29.4.1",
     "nx": "16.10.0",
     "nx-cloud": "latest",
-    "orval": "^6.18.1",
     "postcss": "8.4.21",
     "prettier": "^2.6.2",
     "tailwindcss": "3.2.7",
